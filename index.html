@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GenuTrack - Plataforma Clínica</title>
     
-    <!-- === CONFIGURACIÓN PWA === -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2563eb">
     <link rel="apple-touch-icon" href="icono-192.png">
@@ -19,7 +18,6 @@
         });
       }
     </script>
-    <!-- ========================= -->
 
     <style>
         :root {
@@ -27,6 +25,7 @@
             --primary-hover: #1d4ed8;
             --secondary: #64748b;
             --success: #10b981;
+            --warning: #f59e0b;
             --danger: #ef4444;
             --dark: #0f172a;
             --light: #f8fafc;
@@ -48,7 +47,6 @@
             overflow: hidden;
         }
 
-        /* Gestión de Pantallas */
         .screen {
             display: none;
             width: 100%;
@@ -111,7 +109,7 @@
             border: 1px solid var(--border);
         }
 
-        /* PANEL IZQUIERDO (Controles) */
+        /* PANEL IZQUIERDO */
         .sidebar {
             background-color: #f8fafc;
             border-right: 1px solid var(--border);
@@ -123,7 +121,48 @@
 
         .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
         .dash-header h2 { margin: 0; font-size: 1.5rem; font-weight: 800; color: var(--dark); }
+        
+        .header-right-group { display: flex; align-items: center; gap: 12px; }
         .badge-modo { font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px; }
+
+        /* DISEÑO DE BATERÍA CSS */
+        .battery-container {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--secondary);
+            opacity: 0.4; /* Opaco cuando está desconectado */
+            transition: opacity 0.3s;
+        }
+        .battery-container.connected { opacity: 1; }
+        
+        .battery-icon {
+            width: 22px;
+            height: 11px;
+            border: 2px solid var(--secondary);
+            border-radius: 3px;
+            position: relative;
+            padding: 1px;
+        }
+        .battery-icon::after {
+            content: '';
+            position: absolute;
+            right: -4px;
+            top: 2px;
+            width: 2px;
+            height: 7px;
+            background-color: var(--secondary);
+            border-radius: 0 2px 2px 0;
+        }
+        .battery-level {
+            height: 100%;
+            background-color: var(--success);
+            width: 0%; 
+            border-radius: 1px;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
 
         .hardware-status {
             background-color: var(--surface);
@@ -195,7 +234,7 @@
         .btn-outline { background-color: transparent; border: 1px solid var(--border); color: var(--dark); }
         .btn-outline:hover { background-color: #f1f5f9; }
 
-        /* PANEL DERECHO (Visualización) */
+        /* PANEL DERECHO */
         .main-panel {
             padding: 32px;
             display: flex;
@@ -205,11 +244,7 @@
             overflow-y: auto;
         }
 
-        .top-stats {
-            display: flex;
-            gap: 12px;
-            width: 100%;
-        }
+        .top-stats { display: flex; gap: 12px; width: 100%; }
         .stat-card {
             flex: 1;
             background-color: #f8fafc;
@@ -270,87 +305,25 @@
         }
         canvas { flex: 1; width: 100%; display: block; }
 
-        /* ======================================================== */
-        /* === DISEÑO RESPONSIVO: ADAPTACIÓN PARA MÓVILES (APP) === */
-        /* ======================================================== */
+        /* === RESPONSIVO MÓVIL === */
         @media (max-width: 768px) {
-            body {
-                padding: 0; /* Quitar márgenes externos para parecer App nativa */
-                height: 100%;
-                overflow-y: auto; /* Permitir scroll vertical */
-                background-color: var(--surface);
-            }
-
-            /* Pantalla de inicio móvil */
-            .home-container {
-                padding: 40px 20px;
-                box-shadow: none;
-                border-radius: 0;
-            }
-            .mode-cards {
-                flex-direction: column; /* Tarjetas una debajo de la otra */
-                align-items: center;
-            }
-            .mode-card {
-                width: 100%;
-                max-width: 100%;
-                box-sizing: border-box;
-            }
-
-            /* Dashboard Principal móvil */
-            .dashboard {
-                grid-template-columns: 1fr; /* Eliminar las 2 columnas, poner 1 sola */
-                height: auto;
-                min-height: 100vh;
-                border-radius: 0;
-                border: none;
-                box-shadow: none;
-            }
-
-            /* Panel Izquierdo (ahora queda arriba del todo) */
-            .sidebar {
-                border-right: none;
-                border-bottom: 2px solid var(--border);
-                padding: 20px 16px;
-            }
-
-            /* Panel Derecho (ahora queda debajo de los controles) */
-            .main-panel {
-                padding: 20px 16px;
-                gap: 16px;
-                overflow-y: visible; /* El scroll ahora lo hace el body */
-            }
-
-            /* Tarjetas de estadísticas (en cuadrícula 2x2 para ahorrar espacio) */
-            .top-stats {
-                display: grid;
-                grid-template-columns: 1fr 1fr; /* 2 columnas en lugar de 1 fila larga */
-                gap: 12px;
-            }
-            .stat-card {
-                padding: 12px 8px;
-            }
-            .stat-value {
-                font-size: 1.25rem;
-            }
-
-            /* Visualizaciones al centro (una debajo de la otra) */
-            .center-visualization {
-                grid-template-columns: 1fr; /* Apilar goniometría y animación */
-                gap: 16px;
-            }
+            body { padding: 0; height: 100%; overflow-y: auto; background-color: var(--surface); }
+            .home-container { padding: 40px 20px; box-shadow: none; border-radius: 0; }
+            .mode-cards { flex-direction: column; align-items: center; }
+            .mode-card { width: 100%; max-width: 100%; box-sizing: border-box; }
+            .dashboard { grid-template-columns: 1fr; height: auto; min-height: 100vh; border-radius: 0; border: none; box-shadow: none; }
+            .sidebar { border-right: none; border-bottom: 2px solid var(--border); padding: 20px 16px; }
+            .main-panel { padding: 20px 16px; gap: 16px; overflow-y: visible; }
+            .top-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+            .stat-card { padding: 12px 8px; }
+            .stat-value { font-size: 1.25rem; }
+            .center-visualization { grid-template-columns: 1fr; gap: 16px; }
+            .angle-live-card { padding: 20px 16px; }
+            .live-angle-text { font-size: 4.5rem; }
+            .graph-container { height: 220px; margin-bottom: 20px; }
             
-            .angle-live-card {
-                padding: 20px 16px;
-            }
-            .live-angle-text {
-                font-size: 4.5rem; /* Letra apenas más chica en móvil */
-            }
-
-            .graph-container {
-                height: 220px;
-                margin-bottom: 20px;
-            }
+            /* Ajuste de la batería para que no se amontone en pantallas pequeñas */
+            .header-right-group { gap: 8px; }
         }
     </style>
 </head>
@@ -381,11 +354,20 @@
     <div id="screen-dashboard" class="screen">
         <div class="dashboard">
             
-            <!-- LATERAL (Se convierte en sección superior en móvil) -->
+            <!-- LATERAL -->
             <div class="sidebar">
                 <div class="dash-header">
                     <h2>GenuTrack</h2>
-                    <div class="badge-modo" id="badgeModoTexto">MODO</div>
+                    <div class="header-right-group">
+                        <!-- NUEVO: Contenedor de Batería -->
+                        <div class="battery-container" id="batContainer">
+                            <span id="batText">--%</span>
+                            <div class="battery-icon">
+                                <div class="battery-level" id="batLevel"></div>
+                            </div>
+                        </div>
+                        <div class="badge-modo" id="badgeModoTexto">MODO</div>
+                    </div>
                 </div>
 
                 <div class="hardware-status">
@@ -447,7 +429,7 @@
                 </div>
             </div>
 
-            <!-- PRINCIPAL (Se convierte en sección inferior desplazable) -->
+            <!-- PRINCIPAL -->
             <div class="main-panel">
                 <div class="top-stats">
                     <div class="stat-card"><div class="section-title">ROM Máx</div><div class="stat-value" id="statMax">0°</div></div>
@@ -515,7 +497,6 @@
         let contadorFlexiones = 0, estaEnFlexion = false;
         let tiempoObjetivoSegundos = 0;
 
-        // --- Variables para Velocidad ---
         let anguloAnteriorJS = 0;
         let tiempoAnteriorJS = 0;
         let velocidadSuavizada = 0;
@@ -546,11 +527,10 @@
                 badge.style.color = "white";
                 
                 optLibre.style.display = "block";
-                selectT.value = "0"; // Default: Libre (sin límite)
+                selectT.value = "0"; 
                 
                 document.getElementById('cajaPromedio').style.display = "block";
                 
-                // En móvil, si la pantalla es muy chica, el span 2 del promedio lo ajusta bien al final
                 if(window.innerWidth <= 768) {
                     document.getElementById('cajaPromedio').style.display = "block";
                 }
@@ -607,6 +587,7 @@
                 document.getElementById('ledStatus').className = "led led-on";
                 document.getElementById('textoStatus').innerText = "Sensor Conectado";
                 document.getElementById('textoStatus').style.color = "var(--success)";
+                document.getElementById('batContainer').classList.add('connected');
 
                 document.getElementById('btnConectar').style.display = "none";
                 document.getElementById('btnDescargar').style.display = "none";
@@ -626,11 +607,17 @@
             document.getElementById('textoStatus').innerText = "Desconectado";
             document.getElementById('textoStatus').style.color = "var(--secondary)";
             
+            // Apagar visualmente la batería
+            document.getElementById('batContainer').classList.remove('connected');
+            document.getElementById('batText').innerText = "--%";
+            document.getElementById('batLevel').style.width = "0%";
+            
             document.getElementById('btnIniciar').style.display = "none";
             document.getElementById('btnDetener').style.display = "none";
             document.getElementById('btnConectar').style.display = "flex";
         }
 
+        // --- RECEPCIÓN Y PARSEO DE DATOS ---
         function handleIncomingData(event) {
             const value = new TextDecoder().decode(event.target.value);
             bleBuffer += value;
@@ -638,16 +625,45 @@
             let lines = bleBuffer.split('\n');
             for (let i = 0; i < lines.length - 1; i++) {
                 let line = lines[i].trim();
-                let match = line.match(/Flex:([\d\.]+)/);
-                if(match && match[1]) {
-                    let flexion = parseFloat(match[1]);
+                
+                // Extraer Flexión
+                let matchFlex = line.match(/Flex:([\d\.]+)/);
+                if(matchFlex && matchFlex[1]) {
+                    let flexion = parseFloat(matchFlex[1]);
                     procesarDatoReal(flexion);
+                }
+
+                // Extraer Batería (NUEVO)
+                // Busca un patrón como "B:85" o "Bat:85" en el texto que envía el ESP32
+                let matchBat = line.match(/B:(\d+)/); 
+                if(matchBat && matchBat[1]) {
+                    actualizarBateria(parseInt(matchBat[1]));
                 }
             }
             bleBuffer = lines[lines.length - 1]; 
         }
 
-        // --- LÓGICA DE DATOS ---
+        function actualizarBateria(porcentaje) {
+            // Límite de seguridad visual
+            if (porcentaje > 100) porcentaje = 100;
+            if (porcentaje < 0) porcentaje = 0;
+
+            document.getElementById('batText').innerText = porcentaje + "%";
+            
+            let level = document.getElementById('batLevel');
+            level.style.width = porcentaje + "%";
+            
+            // Cambiar color según la carga
+            if(porcentaje > 50) {
+                level.style.backgroundColor = "var(--success)";
+            } else if (porcentaje > 20) {
+                level.style.backgroundColor = "var(--warning)";
+            } else {
+                level.style.backgroundColor = "var(--danger)";
+            }
+        }
+
+        // --- LÓGICA DE DATOS Y SESIÓN ---
         function procesarDatoReal(angulo) {
             document.getElementById('anguloPantalla').innerHTML = `${angulo.toFixed(1)}<span>°</span>`;
             
@@ -662,32 +678,28 @@
             historialGrafica.push(angulo);
             dibujarGrafica();
 
-            // --- CÁLCULO DE VELOCIDAD ANGULAR ---
             let tiempoActual = Date.now();
             let velocidadActual = 0;
             if (tiempoAnteriorJS > 0) {
-                let dt = (tiempoActual - tiempoAnteriorJS) / 1000.0; // Diferencia en segundos
-                if (dt > 0.02) { // Evitar divisiones infinitas
+                let dt = (tiempoActual - tiempoAnteriorJS) / 1000.0; 
+                if (dt > 0.02) { 
                     velocidadActual = Math.abs((angulo - anguloAnteriorJS) / dt);
                 }
             }
             anguloAnteriorJS = angulo;
             tiempoAnteriorJS = tiempoActual;
 
-            // Suavizado del valor de velocidad (Filtro Low-Pass)
             velocidadSuavizada = (velocidadSuavizada * 0.8) + (velocidadActual * 0.2);
             document.getElementById('statVelocidad').innerText = velocidadSuavizada.toFixed(0) + "°/s";
 
             if (grabando) {
                 let tiempoActualSeg = (Date.now() - tiempoInicio) / 1000;
                 
-                // Guardamos Tiempo, Angulo y Velocidad
                 matrizClinica.push([tiempoActualSeg.toFixed(2), angulo, velocidadSuavizada.toFixed(1)]);
 
                 if (angulo > maxAngulo) { maxAngulo = angulo; document.getElementById('statMax').innerText = maxAngulo.toFixed(1) + "°"; }
                 if (angulo < minAngulo && tiempoActualSeg > 0.5) { minAngulo = angulo; document.getElementById('statMin').innerText = minAngulo.toFixed(1) + "°"; }
 
-                // --- CONTEO DE CICLOS (FLEXIONES) PARA AMBOS MODOS ---
                 if (angulo > 40 && !estaEnFlexion) {
                     estaEnFlexion = true;
                 } else if (angulo < 20 && estaEnFlexion) {
@@ -704,7 +716,6 @@
             }
         }
 
-        // --- CONTROL DE SESIÓN ---
         function iniciarTomaDatos() {
             let nom = document.getElementById('inNombre').value;
             if (nom.trim() === "") {
@@ -712,7 +723,6 @@
                 return;
             }
 
-            // --- LÓGICA DE TIEMPO PERSONALIZADO ---
             let valTiempo = document.getElementById('selectTiempo').value;
             if (valTiempo === 'custom') {
                 let mCustom = parseInt(document.getElementById('inMinCustom').value) || 0;
@@ -728,7 +738,6 @@
                 tiempoObjetivoSegundos = parseInt(valTiempo);
             }
 
-            // Bloquear Inputs
             document.querySelectorAll('.input-field').forEach(i => i.disabled = true);
             document.getElementById('btnRegresar').style.display = "none";
             document.getElementById('btnIniciar').style.display = "none";
@@ -739,7 +748,6 @@
             maxAngulo = 0; minAngulo = 999; sumatoriaAngulos = 0; contadorMuestras = 0;
             contadorFlexiones = 0; estaEnFlexion = false;
             
-            // Reiniciar variables de velocidad al iniciar
             anguloAnteriorJS = 0;
             tiempoAnteriorJS = 0;
             velocidadSuavizada = 0;
@@ -771,7 +779,6 @@
             let segundosTotales = Math.floor(tiempoTranscurrido / 1000);
 
             if (tiempoObjetivoSegundos > 0) {
-                // Cuenta regresiva
                 let segundosRestantes = tiempoObjetivoSegundos - segundosTotales;
                 if (segundosRestantes <= 0) {
                     document.getElementById('tiempoPantalla').innerText = "00:00";
@@ -783,7 +790,6 @@
                 document.getElementById('tiempoPantalla').innerText = 
                     (minutos < 10 ? "0" + minutos : minutos) + ":" + (segundos < 10 ? "0" + segundos : segundos);
             } else {
-                // Cuenta progresiva libre
                 let minutos = Math.floor(tiempoTranscurrido / 60000);
                 let segundos = Math.floor((tiempoTranscurrido % 60000) / 1000);
                 let decimas = Math.floor((tiempoTranscurrido % 1000) / 100);
@@ -826,16 +832,10 @@
             document.getElementById('btnBorrar').style.display = "none";
         }
 
-        // --- GRÁFICA CANVAS ---
         function dibujarGrafica() {
             canvas.width = canvas.parentElement.clientWidth - 32;
-            
-            // Ajustar altura de canvas dinámicamente si es móvil o escritorio
-            if(window.innerWidth <= 768) {
-                canvas.height = 180; // Fijo para móvil
-            } else {
-                canvas.height = canvas.parentElement.clientHeight - 40;
-            }
+            if(window.innerWidth <= 768) { canvas.height = 180; } 
+            else { canvas.height = canvas.parentElement.clientHeight - 40; }
             
             const w = canvas.width;
             const h = canvas.height;
@@ -874,7 +874,6 @@
 
             let csv = "REPORTE CLINICO - GENUTRACK\n----------------------------------------\n";
             csv += `Paciente:,${pNombre}\nEdad:,${pEdad} anos\nDiagnostico:,${pProblema}\nFecha:,${new Date().toLocaleDateString()}\n`;
-            
             csv += `\nTotal de Ciclos (Flexiones):,${contadorFlexiones}\n`;
             
             if (modoActual === 'paciente') {
