@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GenuTrack - Plataforma Clínica</title>
     
+    <!-- === CONFIGURACIÓN PWA === -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2563eb">
     <link rel="apple-touch-icon" href="icono-192.png">
@@ -18,6 +19,7 @@
         });
       }
     </script>
+    <!-- ========================= -->
 
     <style>
         :root {
@@ -47,6 +49,7 @@
             overflow: hidden;
         }
 
+        /* Gestión de Pantallas */
         .screen {
             display: none;
             width: 100%;
@@ -109,7 +112,7 @@
             border: 1px solid var(--border);
         }
 
-        /* PANEL IZQUIERDO */
+        /* PANEL IZQUIERDO (Controles) */
         .sidebar {
             background-color: #f8fafc;
             border-right: 1px solid var(--border);
@@ -125,7 +128,7 @@
         .header-right-group { display: flex; align-items: center; gap: 12px; }
         .badge-modo { font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px; }
 
-        /* DISEÑO DE BATERÍA CSS */
+        /* --- DISEÑO BATERÍA CSS --- */
         .battery-container {
             display: flex;
             align-items: center;
@@ -234,7 +237,7 @@
         .btn-outline { background-color: transparent; border: 1px solid var(--border); color: var(--dark); }
         .btn-outline:hover { background-color: #f1f5f9; }
 
-        /* PANEL DERECHO */
+        /* PANEL DERECHO (Visualización) */
         .main-panel {
             padding: 32px;
             display: flex;
@@ -305,7 +308,9 @@
         }
         canvas { flex: 1; width: 100%; display: block; }
 
-        /* === RESPONSIVO MÓVIL === */
+        /* ========================================== */
+        /* === RESPONSIVO: ADAPTACIÓN PARA MÓVILES == */
+        /* ========================================== */
         @media (max-width: 768px) {
             body { padding: 0; height: 100%; overflow-y: auto; background-color: var(--surface); }
             .home-container { padding: 40px 20px; box-shadow: none; border-radius: 0; }
@@ -321,8 +326,6 @@
             .angle-live-card { padding: 20px 16px; }
             .live-angle-text { font-size: 4.5rem; }
             .graph-container { height: 220px; margin-bottom: 20px; }
-            
-            /* Ajuste de la batería para que no se amontone en pantallas pequeñas */
             .header-right-group { gap: 8px; }
         }
     </style>
@@ -359,7 +362,7 @@
                 <div class="dash-header">
                     <h2>GenuTrack</h2>
                     <div class="header-right-group">
-                        <!-- NUEVO: Contenedor de Batería -->
+                        <!-- CONTENEDOR DE BATERÍA -->
                         <div class="battery-container" id="batContainer">
                             <span id="batText">--%</span>
                             <div class="battery-icon">
@@ -471,6 +474,9 @@
         </div>
     </div>
 
+    <!-- ============================================== -->
+    <!-- === LÓGICA JAVASCRIPT (BLUETOOTH Y DATOS) ==== -->
+    <!-- ============================================== -->
     <script>
         // --- VARIABLES DE LÓGICA ---
         let modoActual = ''; 
@@ -587,6 +593,8 @@
                 document.getElementById('ledStatus').className = "led led-on";
                 document.getElementById('textoStatus').innerText = "Sensor Conectado";
                 document.getElementById('textoStatus').style.color = "var(--success)";
+                
+                // Encender indicador de batería visualmente
                 document.getElementById('batContainer').classList.add('connected');
 
                 document.getElementById('btnConectar').style.display = "none";
@@ -626,15 +634,14 @@
             for (let i = 0; i < lines.length - 1; i++) {
                 let line = lines[i].trim();
                 
-                // Extraer Flexión
+                // 1. Extraer Flexión
                 let matchFlex = line.match(/Flex:([\d\.]+)/);
                 if(matchFlex && matchFlex[1]) {
                     let flexion = parseFloat(matchFlex[1]);
                     procesarDatoReal(flexion);
                 }
 
-                // Extraer Batería (NUEVO)
-                // Busca un patrón como "B:85" o "Bat:85" en el texto que envía el ESP32
+                // 2. Extraer Batería
                 let matchBat = line.match(/B:(\d+)/); 
                 if(matchBat && matchBat[1]) {
                     actualizarBateria(parseInt(matchBat[1]));
