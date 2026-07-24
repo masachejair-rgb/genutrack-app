@@ -269,6 +269,89 @@
             flex-direction: column;
         }
         canvas { flex: 1; width: 100%; display: block; }
+
+        /* ======================================================== */
+        /* === DISEÑO RESPONSIVO: ADAPTACIÓN PARA MÓVILES (APP) === */
+        /* ======================================================== */
+        @media (max-width: 768px) {
+            body {
+                padding: 0; /* Quitar márgenes externos para parecer App nativa */
+                height: 100%;
+                overflow-y: auto; /* Permitir scroll vertical */
+                background-color: var(--surface);
+            }
+
+            /* Pantalla de inicio móvil */
+            .home-container {
+                padding: 40px 20px;
+                box-shadow: none;
+                border-radius: 0;
+            }
+            .mode-cards {
+                flex-direction: column; /* Tarjetas una debajo de la otra */
+                align-items: center;
+            }
+            .mode-card {
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+
+            /* Dashboard Principal móvil */
+            .dashboard {
+                grid-template-columns: 1fr; /* Eliminar las 2 columnas, poner 1 sola */
+                height: auto;
+                min-height: 100vh;
+                border-radius: 0;
+                border: none;
+                box-shadow: none;
+            }
+
+            /* Panel Izquierdo (ahora queda arriba del todo) */
+            .sidebar {
+                border-right: none;
+                border-bottom: 2px solid var(--border);
+                padding: 20px 16px;
+            }
+
+            /* Panel Derecho (ahora queda debajo de los controles) */
+            .main-panel {
+                padding: 20px 16px;
+                gap: 16px;
+                overflow-y: visible; /* El scroll ahora lo hace el body */
+            }
+
+            /* Tarjetas de estadísticas (en cuadrícula 2x2 para ahorrar espacio) */
+            .top-stats {
+                display: grid;
+                grid-template-columns: 1fr 1fr; /* 2 columnas en lugar de 1 fila larga */
+                gap: 12px;
+            }
+            .stat-card {
+                padding: 12px 8px;
+            }
+            .stat-value {
+                font-size: 1.25rem;
+            }
+
+            /* Visualizaciones al centro (una debajo de la otra) */
+            .center-visualization {
+                grid-template-columns: 1fr; /* Apilar goniometría y animación */
+                gap: 16px;
+            }
+            
+            .angle-live-card {
+                padding: 20px 16px;
+            }
+            .live-angle-text {
+                font-size: 4.5rem; /* Letra apenas más chica en móvil */
+            }
+
+            .graph-container {
+                height: 220px;
+                margin-bottom: 20px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -298,7 +381,7 @@
     <div id="screen-dashboard" class="screen">
         <div class="dashboard">
             
-            <!-- LATERAL -->
+            <!-- LATERAL (Se convierte en sección superior en móvil) -->
             <div class="sidebar">
                 <div class="dash-header">
                     <h2>GenuTrack</h2>
@@ -364,14 +447,14 @@
                 </div>
             </div>
 
-            <!-- PRINCIPAL -->
+            <!-- PRINCIPAL (Se convierte en sección inferior desplazable) -->
             <div class="main-panel">
                 <div class="top-stats">
-                    <div class="stat-card"><div class="section-title">ROM Máximo</div><div class="stat-value" id="statMax">0°</div></div>
-                    <div class="stat-card"><div class="section-title">ROM Mínimo</div><div class="stat-value" id="statMin">0°</div></div>
+                    <div class="stat-card"><div class="section-title">ROM Máx</div><div class="stat-value" id="statMax">0°</div></div>
+                    <div class="stat-card"><div class="section-title">ROM Mín</div><div class="stat-value" id="statMin">0°</div></div>
                     <div class="stat-card" id="cajaVelocidad"><div class="section-title">Velocidad</div><div class="stat-value" id="statVelocidad">0°/s</div></div>
                     <div class="stat-card" id="cajaFlexiones"><div class="section-title">Ciclos</div><div class="stat-value" id="statFlexiones">0</div></div>
-                    <div class="stat-card" id="cajaPromedio"><div class="section-title">Promedio</div><div class="stat-value" id="statPromedio">0°</div></div>
+                    <div class="stat-card" id="cajaPromedio" style="grid-column: span 2; display: none;"><div class="section-title">Promedio</div><div class="stat-value" id="statPromedio">0°</div></div>
                 </div>
 
                 <div class="center-visualization">
@@ -383,8 +466,8 @@
                                 <div class="rom-bar-fill" id="barraRom"></div>
                             </div>
                             <div class="rom-labels">
-                                <span>Extensión (0°)</span>
-                                <span>Flexión Máx (150°)</span>
+                                <span>Ext. (0°)</span>
+                                <span>Max (150°)</span>
                             </div>
                         </div>
                     </div>
@@ -466,6 +549,11 @@
                 selectT.value = "0"; // Default: Libre (sin límite)
                 
                 document.getElementById('cajaPromedio').style.display = "block";
+                
+                // En móvil, si la pantalla es muy chica, el span 2 del promedio lo ajusta bien al final
+                if(window.innerWidth <= 768) {
+                    document.getElementById('cajaPromedio').style.display = "block";
+                }
                 document.getElementById('tiempoPantalla').innerText = "00:00.0"; 
             }
             
@@ -741,7 +829,14 @@
         // --- GRÁFICA CANVAS ---
         function dibujarGrafica() {
             canvas.width = canvas.parentElement.clientWidth - 32;
-            canvas.height = canvas.parentElement.clientHeight - 40;
+            
+            // Ajustar altura de canvas dinámicamente si es móvil o escritorio
+            if(window.innerWidth <= 768) {
+                canvas.height = 180; // Fijo para móvil
+            } else {
+                canvas.height = canvas.parentElement.clientHeight - 40;
+            }
+            
             const w = canvas.width;
             const h = canvas.height;
 
@@ -780,7 +875,6 @@
             let csv = "REPORTE CLINICO - GENUTRACK\n----------------------------------------\n";
             csv += `Paciente:,${pNombre}\nEdad:,${pEdad} anos\nDiagnostico:,${pProblema}\nFecha:,${new Date().toLocaleDateString()}\n`;
             
-            // El total de flexiones ahora se muestra independientemente del modo
             csv += `\nTotal de Ciclos (Flexiones):,${contadorFlexiones}\n`;
             
             if (modoActual === 'paciente') {
