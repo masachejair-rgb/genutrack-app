@@ -1,911 +1,408 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GenuTrack - Plataforma Clínica</title>
+    <title>GenuTrack - Plataforma Universal</title>
     
-    <!-- === CONFIGURACIÓN PWA === -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2563eb">
     <link rel="apple-touch-icon" href="icono-192.png">
-    
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('sw.js')
-            .then(reg => console.log('Service Worker registrado con éxito', reg))
-            .catch(err => console.error('Error al registrar Service Worker', err));
-        });
-      }
-    </script>
-    <!-- ========================= -->
 
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --secondary: #64748b;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --dark: #0f172a;
-            --light: #f8fafc;
-            --border: #e2e8f0;
-            --surface: #ffffff;
+            --primary: #2563eb; --primary-hover: #1d4ed8; --secondary: #64748b;
+            --success: #10b981; --warning: #f59e0b; --danger: #ef4444;
+            --dark: #0f172a; --light: #f8fafc; --border: #e2e8f0; --surface: #ffffff;
         }
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #f1f5f9;
-            color: var(--dark);
-            margin: 0;
-            padding: 2vh 2vw;
-            height: 100vh;
-            box-sizing: border-box;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        /* Gestión de Pantallas */
-        .screen {
-            display: none;
-            width: 100%;
-            height: 100%;
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 0.4s ease;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: var(--dark); margin: 0; padding: 2vh 2vw; height: 100vh; box-sizing: border-box; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        .screen { display: none; width: 100%; height: 100%; justify-content: center; align-items: center; animation: fadeIn 0.4s ease; }
         .screen.active { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* PANTALLA DE INICIO */
-        .home-container {
-            background-color: var(--surface);
-            padding: 50px 60px;
-            border-radius: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 10px 15px -3px rgba(0,0,0,0.02);
-            text-align: center;
-            max-width: 800px;
-        }
-        .brand-title { font-size: 2.5rem; font-weight: 800; color: var(--dark); margin: 0 0 10px 0; letter-spacing: -0.5px; }
+        /* INICIO */
+        .home-container { background-color: var(--surface); padding: 50px 60px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; max-width: 800px; }
+        .brand-title { font-size: 2.5rem; font-weight: 800; margin: 0 0 10px 0; }
         .brand-title span { color: var(--primary); }
-        .brand-subtitle { color: var(--secondary); font-size: 1.1rem; margin-bottom: 40px; }
+        .mode-cards { display: flex; gap: 24px; justify-content: center; margin-top: 20px;}
+        .mode-card { background-color: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 30px 24px; width: 280px; cursor: pointer; transition: all 0.2s; text-align: center; font-weight: bold; font-size: 1.2rem;}
+        .mode-card:hover { border-color: var(--primary); transform: translateY(-2px); color: var(--primary);}
 
-        .mode-cards { display: flex; gap: 24px; justify-content: center; }
-        .mode-card {
-            background-color: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 30px 24px;
-            width: 280px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: left;
-        }
-        .mode-card:hover {
-            border-color: var(--primary);
-            box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.1);
-            transform: translateY(-2px);
-        }
-        .mode-icon { font-size: 2.5rem; margin-bottom: 16px; color: var(--primary); }
-        .mode-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 8px; }
-        .mode-desc { font-size: 0.9rem; color: var(--secondary); line-height: 1.5; }
-
-        /* DASHBOARD PRINCIPAL */
-        .dashboard {
-            background-color: var(--surface);
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-            width: 100%;
-            max-width: 1200px;
-            height: 94vh;
-            display: grid;
-            grid-template-columns: 350px 1fr;
-            overflow: hidden;
-            border: 1px solid var(--border);
-        }
-
-        /* PANEL IZQUIERDO (Controles) */
-        .sidebar {
-            background-color: #f8fafc;
-            border-right: 1px solid var(--border);
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-        }
-
+        /* DASHBOARD */
+        .dashboard { background-color: var(--surface); border-radius: 16px; width: 100%; max-width: 1200px; height: 94vh; display: grid; grid-template-columns: 350px 1fr; border: 1px solid var(--border); overflow: hidden;}
+        .sidebar { background-color: #f8fafc; border-right: 1px solid var(--border); padding: 24px; display: flex; flex-direction: column; overflow-y: auto; }
         .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .dash-header h2 { margin: 0; font-size: 1.5rem; font-weight: 800; color: var(--dark); }
-        
+        .dash-header h2 { margin: 0; font-size: 1.5rem; font-weight: 800; }
         .header-right-group { display: flex; align-items: center; gap: 12px; }
-        .badge-modo { font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 6px; letter-spacing: 0.5px; }
-
-        /* --- DISEÑO BATERÍA CSS --- */
-        .battery-container {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--secondary);
-            opacity: 0.4; /* Opaco cuando está desconectado */
-            transition: opacity 0.3s;
-        }
+        
+        .battery-container { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 700; color: var(--secondary); opacity: 0.4; transition: opacity 0.3s; }
         .battery-container.connected { opacity: 1; }
+        .battery-icon { width: 22px; height: 11px; border: 2px solid var(--secondary); border-radius: 3px; position: relative; padding: 1px; }
+        .battery-icon::after { content: ''; position: absolute; right: -4px; top: 2px; width: 2px; height: 7px; background-color: var(--secondary); border-radius: 0 2px 2px 0; }
+        .battery-level { height: 100%; background-color: var(--success); width: 0%; border-radius: 1px; transition: width 0.3s; }
+
+        .section-title { font-size: 0.75rem; text-transform: uppercase; color: var(--secondary); font-weight: 700; margin-bottom: 8px; }
+        .input-field { width: 100%; padding: 10px 12px; margin-bottom: 12px; border: 1px solid var(--border); border-radius: 6px; box-sizing: border-box; font-family: inherit;}
         
-        .battery-icon {
-            width: 22px;
-            height: 11px;
-            border: 2px solid var(--secondary);
-            border-radius: 3px;
-            position: relative;
-            padding: 1px;
-        }
-        .battery-icon::after {
-            content: '';
-            position: absolute;
-            right: -4px;
-            top: 2px;
-            width: 2px;
-            height: 7px;
-            background-color: var(--secondary);
-            border-radius: 0 2px 2px 0;
-        }
-        .battery-level {
-            height: 100%;
-            background-color: var(--success);
-            width: 0%; 
-            border-radius: 1px;
-            transition: width 0.3s ease, background-color 0.3s ease;
-        }
-
-        .hardware-status {
-            background-color: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            margin-bottom: 24px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-        .led { width: 10px; height: 10px; border-radius: 50%; margin-right: 12px; }
-        .led-off { background-color: var(--danger); box-shadow: 0 0 8px rgba(239, 68, 68, 0.4); }
-        .led-on { background-color: var(--success); box-shadow: 0 0 8px rgba(16, 185, 129, 0.4); }
-
-        .section-title { font-size: 0.75rem; text-transform: uppercase; color: var(--secondary); font-weight: 700; margin-bottom: 8px; letter-spacing: 0.5px; }
-
-        .patient-form { margin-bottom: 24px; }
-        .input-field {
-            width: 100%;
-            padding: 10px 12px;
-            margin-bottom: 12px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-family: inherit;
-            box-sizing: border-box;
-            background-color: var(--surface);
-            transition: border 0.2s;
-        }
-        .input-field:focus { outline: none; border-color: var(--primary); }
-        .input-field:disabled { background-color: #f1f5f9; color: #94a3b8; cursor: not-allowed; }
-
-        .controls-wrapper { margin-bottom: 24px; }
-        .cronometro {
-            background-color: var(--dark);
-            color: var(--success);
-            padding: 16px;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            font-size: 2rem;
-            font-weight: 700;
-            text-align: center;
-            letter-spacing: 2px;
-            margin-bottom: 12px;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin-bottom: 8px;
-            transition: all 0.2s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-        }
+        .axis-selector { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; background: white; padding: 12px; border-radius: 8px; border: 1px solid var(--border);}
+        .axis-selector label { font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 8px; cursor: pointer;}
+        
+        .cronometro { background-color: var(--dark); color: var(--success); padding: 16px; border-radius: 8px; font-family: monospace; font-size: 2rem; font-weight: 700; text-align: center; margin-bottom: 12px; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; margin-bottom: 8px; transition: all 0.2s; display: flex; justify-content: center; gap: 8px; }
         .btn-connect { background-color: var(--dark); color: white; }
-        .btn-connect:hover { background-color: #1e293b; }
         .btn-start { background-color: var(--primary); color: white; display: none; }
-        .btn-start:hover { background-color: var(--primary-hover); }
         .btn-stop { background-color: var(--danger); color: white; display: none; }
-        .btn-outline { background-color: transparent; border: 1px solid var(--border); color: var(--dark); }
-        .btn-outline:hover { background-color: #f1f5f9; }
+        .btn-outline { background-color: transparent; border: 1px solid var(--border); }
+        .btn-encerar { background-color: #eff6ff; color: var(--primary); border: 1px solid #bfdbfe; margin-bottom: 24px;}
 
-        /* PANEL DERECHO (Visualización) */
-        .main-panel {
-            padding: 32px;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-            background-color: var(--surface);
-            overflow-y: auto;
-        }
-
-        .top-stats { display: flex; gap: 12px; width: 100%; }
-        .stat-card {
-            flex: 1;
-            background-color: #f8fafc;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 16px 10px;
-            text-align: center;
-        }
-        .stat-value { font-size: 1.5rem; font-weight: 800; color: var(--dark); margin-top: 4px; }
-
-        .center-visualization {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            flex: 1;
-        }
-
-        .angle-live-card {
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 24px;
-            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-        }
-        .live-angle-text { font-size: 5rem; font-weight: 800; color: var(--primary); line-height: 1; margin-bottom: 24px;}
-        .live-angle-text span { font-size: 2rem; color: var(--secondary); }
+        /* MAIN PANEL */
+        .main-panel { padding: 32px; display: flex; flex-direction: column; gap: 24px; overflow-y: auto; }
+        .top-stats { display: flex; gap: 12px; }
+        .stat-card { flex: 1; background-color: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 16px 10px; text-align: center; }
+        .stat-value { font-size: 1.5rem; font-weight: 800; margin-top: 4px; }
+        .center-visualization { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; flex: 1; }
+        .angle-live-card { border: 1px solid var(--border); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; align-items: center; }
+        .live-angle-text { font-size: 5rem; font-weight: 800; color: var(--primary); margin: auto 0;}
         
-        .rom-bar-container { width: 100%; background-color: var(--border); border-radius: 10px; height: 12px; overflow: hidden; }
-        .rom-bar-fill { height: 100%; background-color: var(--primary); width: 0%; transition: width 0.1s linear, background-color 0.3s; }
-        .rom-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--secondary); font-weight: 600; margin-top: 8px; width: 100%;}
+        /* SISTEMA DE BIOFEEDBACK DINÁMICO */
+        .biofeedback-card { border: 1px solid var(--border); border-radius: 12px; display: flex; justify-content: center; align-items: center; background-color: #f8fafc; min-height: 250px; }
+        .limb-container { position: relative; width: 150px; height: 200px; transition: all 0.3s;}
+        
+        .proximal-segment { background-color: #94a3b8; position: absolute; z-index: 2; transition: all 0.3s;}
+        .distal-segment { background-color: #64748b; position: absolute; z-index: 1; transition: all 0.3s, transform 0.1s linear;}
+        .joint { background-color: var(--primary); border: 3px solid white; border-radius: 50%; position: absolute; z-index: 4; transition: all 0.3s;}
 
-        .biofeedback-card {
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f8fafc;
-            min-height: 250px;
-        }
-        .leg-container { position: relative; width: 120px; height: 200px; }
-        .thigh { width: 28px; height: 90px; background-color: #94a3b8; border-radius: 14px; position: absolute; left: 46px; top: 10px; z-index: 2; }
-        .knee-joint { width: 16px; height: 16px; background-color: var(--primary); border-radius: 50%; position: absolute; left: 6px; bottom: 4px; z-index: 4; border: 3px solid white;}
-        .calf { width: 22px; height: 100px; background-color: #64748b; border-radius: 11px; position: absolute; left: 49px; top: 90px; transform-origin: 11px 11px; transform: rotate(0deg); transition: transform 0.1s linear; z-index: 1; }
-        .foot { width: 36px; height: 16px; background-color: var(--dark); border-radius: 8px 16px 4px 8px; position: absolute; bottom: -4px; right: 0px; }
+        /* PLANO SAGITAL (Flexión/Extensión) - VISTA DE PERFIL */
+        .sagital .proximal-segment { width: 30px; height: 90px; border-radius: 15px; left: 60px; top: 10px; }
+        .sagital .distal-segment { width: 24px; height: 100px; border-radius: 12px; left: 63px; top: 90px; transform-origin: 12px 12px; }
+        .sagital .joint { width: 20px; height: 20px; left: 50%; bottom: -4px; transform: translateX(-50%); }
 
-        .graph-container {
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 16px;
-            background-color: var(--surface);
-            height: 180px;
-            display: flex;
-            flex-direction: column;
-        }
+        /* PLANO FRONTAL (Abducción/Aducción) - VISTA DE FRENTE */
+        .frontal .proximal-segment { width: 44px; height: 90px; border-radius: 10px; left: 53px; top: 10px; }
+        .frontal .distal-segment { width: 36px; height: 100px; border-radius: 10px; left: 57px; top: 90px; transform-origin: 18px 12px; }
+        .frontal .joint { width: 44px; height: 20px; border-radius: 10px; left: 50%; bottom: 0; transform: translateX(-50%); border-width: 2px;}
+
+        /* PLANO TRANSVERSO (Rotación) - VISTA DESDE ARRIBA */
+        .transverso .proximal-segment { width: 70px; height: 70px; border-radius: 50%; left: 40px; top: 65px; }
+        .transverso .distal-segment { width: 8px; height: 90px; border-radius: 4px; left: 71px; top: 100px; transform-origin: 4px 0px; }
+        .transverso .joint { width: 20px; height: 20px; left: 50%; bottom: 50%; transform: translate(-50%, 50%); }
+
+        .graph-container { border: 1px solid var(--border); border-radius: 12px; padding: 16px; height: 180px; display: flex; flex-direction: column; }
         canvas { flex: 1; width: 100%; display: block; }
 
-        /* ========================================== */
-        /* === RESPONSIVO: ADAPTACIÓN PARA MÓVILES == */
-        /* ========================================== */
         @media (max-width: 768px) {
-            body { padding: 0; height: 100%; overflow-y: auto; background-color: var(--surface); }
-            .home-container { padding: 40px 20px; box-shadow: none; border-radius: 0; }
-            .mode-cards { flex-direction: column; align-items: center; }
-            .mode-card { width: 100%; max-width: 100%; box-sizing: border-box; }
-            .dashboard { grid-template-columns: 1fr; height: auto; min-height: 100vh; border-radius: 0; border: none; box-shadow: none; }
+            body { padding: 0; height: 100%; overflow-y: auto; }
+            .dashboard { grid-template-columns: 1fr; height: auto; border: none; }
             .sidebar { border-right: none; border-bottom: 2px solid var(--border); padding: 20px 16px; }
             .main-panel { padding: 20px 16px; gap: 16px; overflow-y: visible; }
             .top-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-            .stat-card { padding: 12px 8px; }
-            .stat-value { font-size: 1.25rem; }
             .center-visualization { grid-template-columns: 1fr; gap: 16px; }
-            .angle-live-card { padding: 20px 16px; }
-            .live-angle-text { font-size: 4.5rem; }
-            .graph-container { height: 220px; margin-bottom: 20px; }
-            .header-right-group { gap: 8px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- PANTALLA 1: SELECCIÓN -->
     <div id="screen-home" class="screen active">
         <div class="home-container">
-            <h1 class="brand-title">Genu<span>Track</span></h1>
-            <p class="brand-subtitle">Plataforma de Adquisición Biomecánica</p>
-            
+            <h1 class="brand-title">Genu<span>Track</span> Clínico</h1>
+            <p>Evaluación de la movilidad articular</p>
             <div class="mode-cards">
-                <div class="mode-card" onclick="seleccionarModo('fisio')">
-                    <div class="mode-icon">📊</div>
-                    <div class="mode-title">Análisis Clínico</div>
-                    <div class="mode-desc">Adquisición de alta precisión. Ventana de tiempo definida para extracción de datos y evaluación fisioterapéutica.</div>
-                </div>
-                <div class="mode-card" onclick="seleccionarModo('paciente')">
-                    <div class="mode-icon">🏃</div>
-                    <div class="mode-title">Entrenamiento</div>
-                    <div class="mode-desc">Biofeedback continuo. Conteo automático de ciclos de flexo-extensión y métricas de desempeño en tiempo real.</div>
-                </div>
+                <div class="mode-card" onclick="iniciarApp()">Ingresar a la Plataforma</div>
             </div>
         </div>
     </div>
 
-    <!-- PANTALLA 2: DASHBOARD -->
     <div id="screen-dashboard" class="screen">
         <div class="dashboard">
-            
-            <!-- LATERAL -->
             <div class="sidebar">
                 <div class="dash-header">
                     <h2>GenuTrack</h2>
                     <div class="header-right-group">
-                        <!-- CONTENEDOR DE BATERÍA -->
-                        <div class="battery-container" id="batContainer">
-                            <span id="batText">--%</span>
-                            <div class="battery-icon">
-                                <div class="battery-level" id="batLevel"></div>
-                            </div>
-                        </div>
-                        <div class="badge-modo" id="badgeModoTexto">MODO</div>
+                        <div class="battery-container" id="batContainer"><span id="batText">--%</span><div class="battery-icon"><div class="battery-level" id="batLevel"></div></div></div>
                     </div>
                 </div>
 
-                <div class="hardware-status">
-                    <div class="led led-off" id="ledStatus"></div>
-                    <span id="textoStatus">Estado: Desconectado</span>
-                </div>
+                <div class="section-title">Articulación a Evaluar</div>
+                <select id="selectArticulacion" class="input-field" onchange="actualizarVisualizacion()">
+                    <option value="rodilla">Rodilla</option>
+                    <option value="codo">Codo</option>
+                    <option value="hombro">Hombro</option>
+                    <option value="cuello">Columna Cervical</option>
+                </select>
 
-                <div class="section-title">Registro del Paciente</div>
-                <div class="patient-form" id="formPaciente">
-                    <input type="text" id="inNombre" class="input-field" placeholder="Nombre completo" autocomplete="off">
-                    <div style="display: flex; gap: 8px;">
-                        <input type="number" id="inEdad" class="input-field" placeholder="Edad" style="width: 35%;">
-                        <input type="text" id="inProblema" class="input-field" placeholder="Diagnóstico" style="width: 65%;" autocomplete="off">
-                    </div>
+                <div class="section-title">Plano Osteocinemático</div>
+                <div class="axis-selector">
+                    <!-- SE INVIRTIERON Z Y X SEGÚN LA POSICIÓN FÍSICA DE TU SENSOR -->
+                    <label><input type="radio" name="eje" value="Z" checked onchange="actualizarVisualizacion()"> Sagital (Flexión/Extensión)</label>
+                    <label><input type="radio" name="eje" value="Y" onchange="actualizarVisualizacion()"> Frontal (Abducción/Aducción)</label>
+                    <label><input type="radio" name="eje" value="X" onchange="actualizarVisualizacion()"> Transverso (Rotación)</label>
                 </div>
                 
+                <button class="btn btn-encerar" id="btnEncerar" onclick="encerarAngulo()">🎯 Establecer Cero Anatómico (0°)</button>
+
                 <div class="section-title">Control de Sesión</div>
-                <div class="controls-wrapper">
-                    <select id="selectTiempo" class="input-field" style="margin-bottom: 12px; font-weight: 600;" onchange="verificarPersonalizado()">
-                        <option value="0" id="optLibre">Libre</option>
-                        <option value="60">Test Corto (1 Minuto)</option>
-                        <option value="300">Sesión Estándar (5 Minutos)</option>
-                        <option value="600">Sesión Larga (10 Minutos)</option>
-                        <option value="custom">Personalizado...</option>
-                    </select>
-
-                    <div id="cajaTiempoCustom" style="display: none; margin-bottom: 12px; padding: 12px; border: 1px dashed var(--primary); border-radius: 6px; background-color: #eff6ff;">
-                        <div class="section-title" style="color: var(--primary);">Duración Personalizada</div>
-                        <div style="display: flex; gap: 8px;">
-                            <input type="number" id="inMinCustom" class="input-field" placeholder="Minutos" min="0" max="30" style="margin-bottom: 0;">
-                            <input type="number" id="inSegCustom" class="input-field" placeholder="Segundos" min="0" max="59" style="margin-bottom: 0;">
-                        </div>
-                        <div style="font-size: 0.75rem; color: var(--secondary); margin-top: 6px; font-weight: 600;">Rango: 30 seg - 30 min</div>
-                    </div>
-
-                    <div class="cronometro" id="tiempoPantalla">00:00.0</div>
+                <div class="patient-form">
+                    <input type="text" id="inNombre" class="input-field" placeholder="Nombre del paciente">
                 </div>
+                
+                <div class="cronometro" id="tiempoPantalla">00:00.0</div>
                 
                 <div style="margin-top: auto;">
-                    <button class="btn btn-connect" id="btnConectar" onclick="conectarBluetooth()">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11m5.5-14v20l6-5.5-6-4.5z"/></svg>
-                        Vincular Sensor BLE
-                    </button>
-                    <button class="btn btn-start" id="btnIniciar" onclick="iniciarTomaDatos()">
-                        Iniciar Grabación
-                    </button>
-                    <button class="btn btn-stop" id="btnDetener" onclick="detenerTomaDatos()">
-                        Finalizar Grabación
-                    </button>
-                    <button class="btn btn-outline" id="btnDescargar" onclick="descargarExcel()" style="display: none;">
-                        Exportar Reporte (.csv)
-                    </button>
-                    <button class="btn btn-outline" id="btnBorrar" onclick="borrarDatos()" style="display: none;">
-                        Limpiar Datos
-                    </button>
-                    <button class="btn btn-outline" id="btnRegresar" onclick="volverInicio()" style="margin-top: 16px;">
-                        ← Cambiar Modo
-                    </button>
+                    <button class="btn btn-connect" id="btnConectar" onclick="conectarBluetooth()">Vincular Sensor BLE</button>
+                    <button class="btn btn-start" id="btnIniciar" onclick="iniciarTomaDatos()">Iniciar Grabación</button>
+                    <button class="btn btn-stop" id="btnDetener" onclick="detenerTomaDatos()">Finalizar Grabación</button>
+                    <button class="btn btn-outline" id="btnDescargar" onclick="descargarExcel()" style="display: none;">Exportar Reporte (.csv)</button>
+                    <button class="btn btn-outline" id="btnRegresar" onclick="volverInicio()" style="margin-top:16px;">← Inicio</button>
                 </div>
             </div>
 
-            <!-- PRINCIPAL -->
             <div class="main-panel">
                 <div class="top-stats">
-                    <div class="stat-card"><div class="section-title">ROM Máx</div><div class="stat-value" id="statMax">0°</div></div>
-                    <div class="stat-card"><div class="section-title">ROM Mín</div><div class="stat-value" id="statMin">0°</div></div>
-                    <div class="stat-card" id="cajaVelocidad"><div class="section-title">Velocidad</div><div class="stat-value" id="statVelocidad">0°/s</div></div>
-                    <div class="stat-card" id="cajaFlexiones"><div class="section-title">Ciclos</div><div class="stat-value" id="statFlexiones">0</div></div>
-                    <div class="stat-card" id="cajaPromedio" style="grid-column: span 2; display: none;"><div class="section-title">Promedio</div><div class="stat-value" id="statPromedio">0°</div></div>
+                    <div class="stat-card"><div class="section-title">ROM Máximo</div><div class="stat-value" id="statMax">0°</div></div>
+                    <div class="stat-card"><div class="section-title">ROM Mínimo</div><div class="stat-value" id="statMin">0°</div></div>
+                    <div class="stat-card"><div class="section-title">Velocidad</div><div class="stat-value" id="statVelocidad">0°/s</div></div>
                 </div>
 
                 <div class="center-visualization">
                     <div class="angle-live-card">
-                        <div class="section-title" style="margin-bottom: auto;">Goniometría en Vivo</div>
+                        <div class="section-title" id="tituloEjeTexto">Plano Sagital (Flexo-Extensión)</div>
                         <div class="live-angle-text" id="anguloPantalla">0<span>°</span></div>
-                        <div style="width: 100%; margin-top: auto;">
-                            <div class="rom-bar-container">
-                                <div class="rom-bar-fill" id="barraRom"></div>
-                            </div>
-                            <div class="rom-labels">
-                                <span>Ext. (0°)</span>
-                                <span>Max (150°)</span>
-                            </div>
-                        </div>
                     </div>
                     
                     <div class="biofeedback-card">
-                        <div class="leg-container">
-                            <div class="thigh"><div class="knee-joint"></div></div>
-                            <div class="calf" id="piernaAnimada"><div class="foot"></div></div>
+                        <div class="limb-container sagital" id="contenedorPierna">
+                            <div class="proximal-segment"><div class="joint"></div></div>
+                            <div class="distal-segment" id="miembroAnimado"></div>
                         </div>
                     </div>
                 </div>
 
                 <div class="graph-container">
-                    <div class="section-title">Cinemática de la Articulación</div>
+                    <div class="section-title">Cinemática en Vivo</div>
                     <canvas id="graficaAngulo"></canvas>
                 </div>
             </div>
-
         </div>
     </div>
 
-    <!-- ============================================== -->
-    <!-- === LÓGICA JAVASCRIPT (BLUETOOTH Y DATOS) ==== -->
-    <!-- ============================================== -->
     <script>
-        // --- VARIABLES DE LÓGICA ---
-        let modoActual = ''; 
         let grabando = false; 
-        
-        // --- VARIABLES BLUETOOTH (Web BLE) ---
-        let bluetoothDevice;
-        let rxCharacteristic;
-        let bleBuffer = "";
+        let bluetoothDevice, rxCharacteristic, bleBuffer = "";
         const SERVICE_UUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
         const CHAR_TX_UUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
 
-        // --- VARIABLES DE DATOS ---
         let matrizClinica = []; 
-        let tiempoInicio = 0;
-        let cronometroInterval;
+        let tiempoInicio = 0, cronometroInterval;
+        let historialGrafica = new Array(100).fill(0);
+        const canvas = document.getElementById('graficaAngulo'), ctx = canvas.getContext('2d');
 
-        const MAX_PUNTOS_GRAFICA = 100; 
-        let historialGrafica = new Array(MAX_PUNTOS_GRAFICA).fill(0);
-        const canvas = document.getElementById('graficaAngulo');
-        const ctx = canvas.getContext('2d');
+        let maxAngulo = 0, minAngulo = 999;
+        let anguloAnteriorJS = 0, tiempoAnteriorJS = 0, velocidadSuavizada = 0;
 
-        let maxAngulo = 0, minAngulo = 999, sumatoriaAngulos = 0, contadorMuestras = 0;
-        let contadorFlexiones = 0, estaEnFlexion = false;
-        let tiempoObjetivoSegundos = 0;
+        // Eje por defecto cambiado a Z (ahora Sagital)
+        let ejeActivo = 'Z'; 
+        let rawX = 0, rawY = 0, rawZ = 0;
+        let offsetX = 0, offsetY = 0, offsetZ = 0;
 
-        let anguloAnteriorJS = 0;
-        let tiempoAnteriorJS = 0;
-        let velocidadSuavizada = 0;
+        // --- VARIABLES DEL FILTRO DE RUIDO ---
+        let anguloSuavizado = 0;
+        let anguloMostrarFinal = 0;
+        const ALPHA_FILTRO = 0.15; // Suavidad: 0.1 es muy suave, 0.9 es muy brusco
+        const BANDA_MUERTA = 1;    // Ignorar cambios menores a 1 grado (ruido elástico)
+        // -------------------------------------
 
-        // --- FUNCIONES DE INTERFAZ ---
-        function seleccionarModo(modo) {
-            modoActual = modo;
+        function iniciarApp() {
             document.getElementById('screen-home').classList.remove('active');
             document.getElementById('screen-dashboard').classList.add('active');
-            
-            let badge = document.getElementById('badgeModoTexto');
-            let selectT = document.getElementById('selectTiempo');
-            let optLibre = document.getElementById('optLibre');
-
-            if (modo === 'fisio') {
-                badge.innerText = "CLÍNICO";
-                badge.style.backgroundColor = "var(--primary)";
-                badge.style.color = "white";
-                
-                optLibre.style.display = "none";
-                if(selectT.value === "0") selectT.value = "60"; 
-                
-                document.getElementById('cajaPromedio').style.display = "none";
-                document.getElementById('tiempoPantalla').innerText = "00:00"; 
-            } else {
-                badge.innerText = "ENTRENAMIENTO";
-                badge.style.backgroundColor = "var(--success)";
-                badge.style.color = "white";
-                
-                optLibre.style.display = "block";
-                selectT.value = "0"; 
-                
-                document.getElementById('cajaPromedio').style.display = "block";
-                
-                if(window.innerWidth <= 768) {
-                    document.getElementById('cajaPromedio').style.display = "block";
-                }
-                document.getElementById('tiempoPantalla').innerText = "00:00.0"; 
-            }
-            
-            verificarPersonalizado();
             dibujarGrafica();
-            borrarDatos(true); 
-        }
-
-        function verificarPersonalizado() {
-            let select = document.getElementById('selectTiempo');
-            let caja = document.getElementById('cajaTiempoCustom');
-            if (select.value === 'custom') {
-                caja.style.display = 'block';
-            } else {
-                caja.style.display = 'none';
-            }
         }
 
         function volverInicio() {
-            if (grabando) {
-                alert("Detén la toma de datos antes de salir.");
-                return;
-            }
-            if(bluetoothDevice && bluetoothDevice.gatt.connected) {
-                bluetoothDevice.gatt.disconnect();
-            }
+            if (grabando) return alert("Detén la toma de datos primero.");
+            if(bluetoothDevice && bluetoothDevice.gatt.connected) bluetoothDevice.gatt.disconnect();
             document.getElementById('screen-dashboard').classList.remove('active');
             document.getElementById('screen-home').classList.add('active');
-            borrarDatos(true);
         }
 
-        // --- LÓGICA BLUETOOTH ---
+        function actualizarVisualizacion() {
+            ejeActivo = document.querySelector('input[name="eje"]:checked').value;
+            let contenedor = document.getElementById('contenedorPierna');
+            let titulo = document.getElementById('tituloEjeTexto');
+            
+            // Actualizado para reflejar tu orientación física
+            if(ejeActivo === 'Z') {
+                contenedor.className = "limb-container sagital";
+                titulo.innerText = "Plano Sagital (Flexión/Extensión)";
+            } else if(ejeActivo === 'Y') {
+                contenedor.className = "limb-container frontal";
+                titulo.innerText = "Plano Frontal (Abducción/Aducción)";
+            } else if(ejeActivo === 'X') {
+                contenedor.className = "limb-container transverso";
+                titulo.innerText = "Plano Transverso (Rotación)";
+            }
+            
+            document.getElementById('miembroAnimado').style.transform = "rotate(0deg)";
+        }
+
+        function encerarAngulo() {
+            offsetX = rawX; offsetY = rawY; offsetZ = rawZ;
+            anguloSuavizado = 0; // Reiniciamos también el filtro
+            anguloMostrarFinal = 0;
+            let btn = document.getElementById('btnEncerar');
+            btn.innerHTML = "✅ Cero Anatómico Guardado";
+            btn.style.backgroundColor = "var(--success)";
+            btn.style.color = "white";
+            setTimeout(() => {
+                btn.innerHTML = "🎯 Establecer Cero Anatómico (0°)";
+                btn.style.backgroundColor = "#eff6ff";
+                btn.style.color = "var(--primary)";
+            }, 2000);
+        }
+
         async function conectarBluetooth() {
             try {
-                document.getElementById('textoStatus').innerText = "Buscando GenuTrack...";
-                
                 bluetoothDevice = await navigator.bluetooth.requestDevice({
-                    filters: [{ name: 'GenuTrack-BLE' }],
-                    optionalServices: [SERVICE_UUID]
+                    filters: [{ name: 'GenuTrack-BLE' }], optionalServices: [SERVICE_UUID]
                 });
-
                 bluetoothDevice.addEventListener('gattserverdisconnected', onDisconnectBLE);
-
                 const server = await bluetoothDevice.gatt.connect();
                 const service = await server.getPrimaryService(SERVICE_UUID);
                 rxCharacteristic = await service.getCharacteristic(CHAR_TX_UUID);
-
                 await rxCharacteristic.startNotifications();
                 rxCharacteristic.addEventListener('characteristicvaluechanged', handleIncomingData);
 
-                document.getElementById('ledStatus').className = "led led-on";
-                document.getElementById('textoStatus').innerText = "Sensor Conectado";
-                document.getElementById('textoStatus').style.color = "var(--success)";
-                
-                // Encender indicador de batería visualmente
                 document.getElementById('batContainer').classList.add('connected');
-
                 document.getElementById('btnConectar').style.display = "none";
-                document.getElementById('btnDescargar').style.display = "none";
-                document.getElementById('btnBorrar').style.display = "none";
                 document.getElementById('btnIniciar').style.display = "flex";
-
-            } catch (error) {
-                console.error(error);
-                document.getElementById('textoStatus').innerText = "Error o cancelado";
-                alert("No se pudo conectar. Verifica que el ESP32 esté encendido y tenga el código BLE.");
-            }
+            } catch (error) { alert("Error de conexión."); }
         }
 
         function onDisconnectBLE() {
             if(grabando) detenerTomaDatos();
-            document.getElementById('ledStatus').className = "led led-off";
-            document.getElementById('textoStatus').innerText = "Desconectado";
-            document.getElementById('textoStatus').style.color = "var(--secondary)";
-            
-            // Apagar visualmente la batería
             document.getElementById('batContainer').classList.remove('connected');
-            document.getElementById('batText').innerText = "--%";
-            document.getElementById('batLevel').style.width = "0%";
-            
             document.getElementById('btnIniciar').style.display = "none";
-            document.getElementById('btnDetener').style.display = "none";
             document.getElementById('btnConectar').style.display = "flex";
         }
 
-        // --- RECEPCIÓN Y PARSEO DE DATOS ---
         function handleIncomingData(event) {
-            const value = new TextDecoder().decode(event.target.value);
-            bleBuffer += value;
-            
+            bleBuffer += new TextDecoder().decode(event.target.value);
             let lines = bleBuffer.split('\n');
             for (let i = 0; i < lines.length - 1; i++) {
                 let line = lines[i].trim();
-                
-                // 1. Extraer Flexión
-                let matchFlex = line.match(/Flex:([\d\.]+)/);
-                if(matchFlex && matchFlex[1]) {
-                    let flexion = parseFloat(matchFlex[1]);
-                    procesarDatoReal(flexion);
-                }
+                let match = line.match(/X:([\-\d\.]+)\s+Y:([\-\d\.]+)\s+Z:([\-\d\.]+)\s+B:(\d+)/);
+                if(match) {
+                    rawX = parseFloat(match[1]);
+                    rawY = parseFloat(match[2]);
+                    rawZ = parseFloat(match[3]);
+                    
+                    let bat = parseInt(match[4]);
+                    document.getElementById('batText').innerText = bat + "%";
+                    document.getElementById('batLevel').style.width = bat + "%";
+                    document.getElementById('batLevel').style.backgroundColor = bat > 50 ? "var(--success)" : (bat > 20 ? "var(--warning)" : "var(--danger)");
 
-                // 2. Extraer Batería
-                let matchBat = line.match(/B:(\d+)/); 
-                if(matchBat && matchBat[1]) {
-                    actualizarBateria(parseInt(matchBat[1]));
+                    let anguloBruto = 0;
+                    if(ejeActivo === 'Z') anguloBruto = rawZ - offsetZ;
+                    if(ejeActivo === 'Y') anguloBruto = rawY - offsetY;
+                    if(ejeActivo === 'X') anguloBruto = rawX - offsetX;
+                    
+                    // --- APLICACIÓN DE LOS FILTROS MATEMÁTICOS ---
+                    
+                    // 1. Filtro EMA (Absorbe espasmos y temblores rápidos)
+                    anguloSuavizado = (ALPHA_FILTRO * anguloBruto) + ((1 - ALPHA_FILTRO) * anguloSuavizado);
+                    
+                    // 2. Redondeo para eliminar números decimales (Convierte a Entero)
+                    let anguloEntero = Math.round(anguloSuavizado);
+
+                    // 3. Filtro de Banda Muerta (Ruido Elástico)
+                    // Solo actualiza la pantalla si el movimiento supera el margen de ruido
+                    if (Math.abs(anguloEntero - anguloMostrarFinal) >= BANDA_MUERTA) {
+                        anguloMostrarFinal = anguloEntero;
+                    }
+                    
+                    procesarDatoReal(anguloMostrarFinal);
                 }
             }
             bleBuffer = lines[lines.length - 1]; 
         }
 
-        function actualizarBateria(porcentaje) {
-            // Límite de seguridad visual
-            if (porcentaje > 100) porcentaje = 100;
-            if (porcentaje < 0) porcentaje = 0;
-
-            document.getElementById('batText').innerText = porcentaje + "%";
-            
-            let level = document.getElementById('batLevel');
-            level.style.width = porcentaje + "%";
-            
-            // Cambiar color según la carga
-            if(porcentaje > 50) {
-                level.style.backgroundColor = "var(--success)";
-            } else if (porcentaje > 20) {
-                level.style.backgroundColor = "var(--warning)";
-            } else {
-                level.style.backgroundColor = "var(--danger)";
-            }
-        }
-
-        // --- LÓGICA DE DATOS Y SESIÓN ---
         function procesarDatoReal(angulo) {
-            document.getElementById('anguloPantalla').innerHTML = `${angulo.toFixed(1)}<span>°</span>`;
+            // Ya no usamos .toFixed(1) porque ahora es un número entero perfecto
+            document.getElementById('anguloPantalla').innerHTML = `${Math.abs(angulo)}<span>°</span>`;
             
-            let porcentaje = (angulo / 150) * 100;
-            let barra = document.getElementById('barraRom');
-            barra.style.width = (porcentaje > 100 ? 100 : (porcentaje < 0 ? 0 : porcentaje)) + '%';
-            barra.style.backgroundColor = angulo > 90 ? "var(--success)" : "var(--primary)";
-            
-            document.getElementById('piernaAnimada').style.transform = `rotate(${-angulo}deg)`;
+            // Animación CSS dinámica
+            let giroAnimacion = (ejeActivo === 'Z') ? -angulo : angulo;
+            document.getElementById('miembroAnimado').style.transform = `rotate(${giroAnimacion}deg)`;
 
             historialGrafica.shift();
-            historialGrafica.push(angulo);
+            historialGrafica.push(Math.abs(angulo));
             dibujarGrafica();
 
-            let tiempoActual = Date.now();
-            let velocidadActual = 0;
-            if (tiempoAnteriorJS > 0) {
-                let dt = (tiempoActual - tiempoAnteriorJS) / 1000.0; 
-                if (dt > 0.02) { 
-                    velocidadActual = Math.abs((angulo - anguloAnteriorJS) / dt);
-                }
+            let tiempoAct = Date.now();
+            if (tiempoAnteriorJS > 0 && (tiempoAct - tiempoAnteriorJS)/1000.0 > 0.02) {
+                let vel = Math.abs((angulo - anguloAnteriorJS) / ((tiempoAct - tiempoAnteriorJS)/1000.0));
+                velocidadSuavizada = (velocidadSuavizada * 0.8) + (vel * 0.2);
+                document.getElementById('statVelocidad').innerText = Math.round(velocidadSuavizada) + "°/s";
             }
-            anguloAnteriorJS = angulo;
-            tiempoAnteriorJS = tiempoActual;
-
-            velocidadSuavizada = (velocidadSuavizada * 0.8) + (velocidadActual * 0.2);
-            document.getElementById('statVelocidad').innerText = velocidadSuavizada.toFixed(0) + "°/s";
+            anguloAnteriorJS = angulo; tiempoAnteriorJS = tiempoAct;
 
             if (grabando) {
-                let tiempoActualSeg = (Date.now() - tiempoInicio) / 1000;
-                
-                matrizClinica.push([tiempoActualSeg.toFixed(2), angulo, velocidadSuavizada.toFixed(1)]);
-
-                if (angulo > maxAngulo) { maxAngulo = angulo; document.getElementById('statMax').innerText = maxAngulo.toFixed(1) + "°"; }
-                if (angulo < minAngulo && tiempoActualSeg > 0.5) { minAngulo = angulo; document.getElementById('statMin').innerText = minAngulo.toFixed(1) + "°"; }
-
-                if (angulo > 40 && !estaEnFlexion) {
-                    estaEnFlexion = true;
-                } else if (angulo < 20 && estaEnFlexion) {
-                    contadorFlexiones++;
-                    estaEnFlexion = false;
-                    document.getElementById('statFlexiones').innerText = contadorFlexiones;
-                }
-
-                if (modoActual === 'paciente') {
-                    sumatoriaAngulos += angulo;
-                    contadorMuestras++;
-                    document.getElementById('statPromedio').innerText = Math.round(sumatoriaAngulos / contadorMuestras) + "°";
-                }
+                matrizClinica.push([(Date.now() - tiempoInicio)/1000, rawX - offsetX, rawY - offsetY, rawZ - offsetZ]);
+                let angAbs = Math.abs(angulo);
+                if (angAbs > maxAngulo) { maxAngulo = angAbs; document.getElementById('statMax').innerText = maxAngulo + "°"; }
+                if (angAbs < minAngulo && (Date.now() - tiempoInicio) > 500) { minAngulo = angAbs; document.getElementById('statMin').innerText = minAngulo + "°"; }
             }
         }
 
         function iniciarTomaDatos() {
-            let nom = document.getElementById('inNombre').value;
-            if (nom.trim() === "") {
-                alert("Registra el nombre del paciente para iniciar.");
-                return;
-            }
-
-            let valTiempo = document.getElementById('selectTiempo').value;
-            if (valTiempo === 'custom') {
-                let mCustom = parseInt(document.getElementById('inMinCustom').value) || 0;
-                let sCustom = parseInt(document.getElementById('inSegCustom').value) || 0;
-                let totalSegundos = (mCustom * 60) + sCustom;
-                
-                if (totalSegundos < 30 || totalSegundos > 1800) {
-                    alert("Por favor, ingresa un tiempo válido entre 30 segundos y 30 minutos.");
-                    return;
-                }
-                tiempoObjetivoSegundos = totalSegundos;
-            } else {
-                tiempoObjetivoSegundos = parseInt(valTiempo);
-            }
-
-            document.querySelectorAll('.input-field').forEach(i => i.disabled = true);
-            document.getElementById('btnRegresar').style.display = "none";
+            if (document.getElementById('inNombre').value.trim() === "") return alert("Falta el nombre.");
             document.getElementById('btnIniciar').style.display = "none";
-            document.getElementById('btnBorrar').style.display = "none";
             document.getElementById('btnDetener').style.display = "flex";
-
-            matrizClinica = [];
-            maxAngulo = 0; minAngulo = 999; sumatoriaAngulos = 0; contadorMuestras = 0;
-            contadorFlexiones = 0; estaEnFlexion = false;
+            document.getElementById('btnDescargar').style.display = "none";
             
-            anguloAnteriorJS = 0;
-            tiempoAnteriorJS = 0;
-            velocidadSuavizada = 0;
-            
-            document.getElementById('textoStatus').innerText = "Grabando Clínica...";
-            document.getElementById('textoStatus').style.color = "var(--danger)";
-
-            tiempoInicio = Date.now();
-            grabando = true;
-            cronometroInterval = setInterval(actualizarCronometro, 50); 
+            matrizClinica = []; maxAngulo = 0; minAngulo = 999;
+            tiempoInicio = Date.now(); grabando = true;
+            cronometroInterval = setInterval(() => {
+                let segs = Math.floor((Date.now() - tiempoInicio) / 1000);
+                let decimas = Math.floor(((Date.now() - tiempoInicio) % 1000) / 100);
+                document.getElementById('tiempoPantalla').innerText = Math.floor(segs/60).toString().padStart(2,'0') + ":" + (segs%60).toString().padStart(2,'0') + "." + decimas;
+            }, 100); 
         }
 
         function detenerTomaDatos() {
-            grabando = false;
-            clearInterval(cronometroInterval);
-            
-            document.getElementById('textoStatus').innerText = "Sensor Conectado (En Pausa)";
-            document.getElementById('textoStatus').style.color = "var(--success)";
-
+            grabando = false; clearInterval(cronometroInterval);
             document.getElementById('btnDetener').style.display = "none";
             document.getElementById('btnIniciar').style.display = "flex";
             document.getElementById('btnDescargar').style.display = "flex";
-            document.getElementById('btnBorrar').style.display = "flex"; 
-            document.getElementById('btnRegresar').style.display = "flex";
-        }
-
-        function actualizarCronometro() {
-            let tiempoTranscurrido = Date.now() - tiempoInicio;
-            let segundosTotales = Math.floor(tiempoTranscurrido / 1000);
-
-            if (tiempoObjetivoSegundos > 0) {
-                let segundosRestantes = tiempoObjetivoSegundos - segundosTotales;
-                if (segundosRestantes <= 0) {
-                    document.getElementById('tiempoPantalla').innerText = "00:00";
-                    detenerTomaDatos();
-                    return;
-                }
-                let minutos = Math.floor(segundosRestantes / 60);
-                let segundos = segundosRestantes % 60;
-                document.getElementById('tiempoPantalla').innerText = 
-                    (minutos < 10 ? "0" + minutos : minutos) + ":" + (segundos < 10 ? "0" + segundos : segundos);
-            } else {
-                let minutos = Math.floor(tiempoTranscurrido / 60000);
-                let segundos = Math.floor((tiempoTranscurrido % 60000) / 1000);
-                let decimas = Math.floor((tiempoTranscurrido % 1000) / 100);
-                document.getElementById('tiempoPantalla').innerText = 
-                    (minutos < 10 ? "0" + minutos : minutos) + ":" + (segundos < 10 ? "0" + segundos : segundos) + "." + decimas;
-            }
-        }
-
-        function borrarDatos(silencioso = false) {
-            matrizClinica = [];
-            document.getElementById('anguloPantalla').innerHTML = "0<span>°</span>";
-            document.getElementById('barraRom').style.width = "0%";
-            document.getElementById('barraRom').style.backgroundColor = "var(--primary)";
-            
-            let limiteActual = document.getElementById('selectTiempo').value;
-            if(limiteActual === "0") document.getElementById('tiempoPantalla').innerText = "00:00.0";
-            else document.getElementById('tiempoPantalla').innerText = "00:00";
-
-            document.getElementById('statMax').innerText = "0°";
-            document.getElementById('statMin').innerText = "0°";
-            document.getElementById('statVelocidad').innerText = "0°/s";
-            document.getElementById('statPromedio').innerText = "0°";
-            document.getElementById('statFlexiones').innerText = "0";
-            document.getElementById('piernaAnimada').style.transform = "rotate(0deg)";
-
-            historialGrafica = new Array(MAX_PUNTOS_GRAFICA).fill(0);
-            dibujarGrafica();
-
-            document.querySelectorAll('.input-field').forEach(i => i.disabled = false);
-
-            if(!silencioso) {
-                document.getElementById('inNombre').value = "";
-                document.getElementById('inEdad').value = "";
-                document.getElementById('inProblema').value = "";
-                document.getElementById('inMinCustom').value = "";
-                document.getElementById('inSegCustom').value = "";
-            }
-
-            document.getElementById('btnDescargar').style.display = "none";
-            document.getElementById('btnBorrar').style.display = "none";
         }
 
         function dibujarGrafica() {
             canvas.width = canvas.parentElement.clientWidth - 32;
-            if(window.innerWidth <= 768) { canvas.height = 180; } 
-            else { canvas.height = canvas.parentElement.clientHeight - 40; }
-            
-            const w = canvas.width;
-            const h = canvas.height;
-
-            ctx.clearRect(0, 0, w, h);
-            
-            ctx.strokeStyle = '#f1f5f9';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            for(let i = 0; i < h; i += 20) { ctx.moveTo(0, i); ctx.lineTo(w, i); }
-            for(let i = 0; i < w; i += 40) { ctx.moveTo(i, 0); ctx.lineTo(i, h); }
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.strokeStyle = '#2563eb'; 
-            ctx.lineWidth = 3;
-            ctx.lineJoin = 'round';
-
-            for (let i = 0; i < MAX_PUNTOS_GRAFICA; i++) {
-                let x = (i / (MAX_PUNTOS_GRAFICA - 1)) * w;
-                let y = h - ((historialGrafica[i] / 150) * h);
-                if (y < 0) y = 0; 
-                
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
+            canvas.height = canvas.parentElement.clientHeight - 40;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#2563eb'; ctx.lineWidth = 3; ctx.beginPath();
+            for (let i = 0; i < 100; i++) {
+                let x = (i / 99) * canvas.width;
+                let y = canvas.height - ((historialGrafica[i] / 180) * canvas.height); 
+                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
             }
             ctx.stroke();
         }
 
         function descargarExcel() {
-            if (matrizClinica.length === 0) return alert("No hay datos para descargar");
+            let articulacion = document.getElementById('selectArticulacion').options[document.getElementById('selectArticulacion').selectedIndex].text;
+            let csv = "REPORTE OSTEOCINEMATICO - GENUTRACK\nPaciente: " + document.getElementById('inNombre').value + "\nArticulacion: " + articulacion + "\n\n";
+            // Ahora la leyenda indica que Z es el plano sagital y X el transverso
+            csv += "Tiempo(s),Transversal_X(Grados),Frontal_Y(Grados),Sagital_Z(Grados)\n";
+            // Exporta en números enteros, sin decimales
+            matrizClinica.forEach(f => csv += f[0].toFixed(2) + "," + Math.round(f[1]) + "," + Math.round(f[2]) + "," + Math.round(f[3]) + "\n");
             
-            let pNombre = document.getElementById('inNombre').value;
-            let pEdad = document.getElementById('inEdad').value;
-            let pProblema = document.getElementById('inProblema').value;
-
-            let csv = "REPORTE CLINICO - GENUTRACK\n----------------------------------------\n";
-            csv += `Paciente:,${pNombre}\nEdad:,${pEdad} anos\nDiagnostico:,${pProblema}\nFecha:,${new Date().toLocaleDateString()}\n`;
-            csv += `\nTotal de Ciclos (Flexiones):,${contadorFlexiones}\n`;
-            
-            if (modoActual === 'paciente') {
-                csv += `Promedio ROM:,${Math.round(sumatoriaAngulos / contadorMuestras)}°\n`;
-            }
-            
-            csv += `Maximo ROM:,${maxAngulo}°\nMinimo ROM:,${minAngulo}°\n----------------------------------------\n\n`;
-            csv += "Tiempo(s),Angulo(Grados),Velocidad(Grados/s)\n";
-            
-            matrizClinica.forEach(f => { csv += f.join(",") + "\n"; });
-            
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement("a");
+            let blob = new Blob([csv], { type: 'text/csv' });
+            let link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
-            link.download = `GenuTrack_${pNombre.replace(/ /g, "_")}.csv`;
-            document.body.appendChild(link);
+            link.download = `GenuTrack_${document.getElementById('inNombre').value}.csv`;
             link.click();
-            document.body.removeChild(link);
         }
-        
-        window.onload = dibujarGrafica;
-        window.onresize = dibujarGrafica;
     </script>
 </body>
 </html>
-
-```
