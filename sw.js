@@ -1,5 +1,5 @@
 // Variable de versión: ¡Cambia este número (v2, v3...) cada vez que actualices el HTML!
-const CACHE_NAME = 'genutrack-v2.1'; 
+const CACHE_NAME = 'genutrack-v3'; 
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
