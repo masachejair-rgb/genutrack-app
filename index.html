@@ -1,3 +1,1558 @@
+
+Gemini
+Nueva conversación
+Buscar conversaciones
+Imágenes
+Vídeos
+Biblioteca
+Nuevo cuaderno
+Informe Análisis Volumen Respiratorio
+Modificar HTML para Eje Transverso
+Rodillera con MPU6050: Código
+Tecnologías de Asistencia en Baloncesto Adaptado
+Diseño de Contador de Latidos Sin Microcontrolador
+Filtro Pasa Altas Activo Comportamiento Real
+Transcripción de Imágenes a Excel
+Propuestas de Logo para GenuTrack
+Explicación de Actividad de Laboratorio
+Opciones de Sólido en Archivos
+GenuTrack: Personalización de Tiempo de Grabación
+Calcular Volumen de Balón con Circunferencia
+Ahorrar Para Un Gusto
+Análisis de Sustracción de Imágenes Médicas
+Solución Error TH Associated Cells PDF/UA
+Archivos a .mat en MATLAB
+Tablas de Velocidades de Centrífuga
+Informe de Equipo Biomédico: Guía Detallada
+Modificación de valores numéricos en imagen
+Reestructuración de Interfaz Clínica GenuTrack
+Diseño de Monitor y Conmutador de Batería
+Clasificación de Empresas Según la CAN
+Guía Paso a Paso para Práctica
+Pines I2C del ESP32-C3 SuperMini
+Solución Error Webcam MATLAB
+Keyboard Membrane Switch Matrix Explained
+Soldadura en PCB: Guía y Verificación
+Texto Alternativo para Imagen Médica
+Usar Medical Imaging Toolbox MATLAB
+Ajustar Impresión a Una Sola Hoja
+con rol de experto en fisioterapia y en el desarrollo de ortesisis de rehabilitacion o diagnostico para patologias en la rodilla , analizar proyectos que requieren ingenieria en rehabilitacion enfocada en patologias de rodilla , estructura una tabla comparativa de posibles propuestas donde se explique la patologia , el dispositvo o requirimiento tecnologico , el tiempo de desarrollo
+ayudame debo hacer una practica que es sobre primero necesito que me pases el codigo de matlab que pide , usa el que te proporciana el pdf , mi imagen es mrjair.dcm
+Mostrar Tablas en MATLAB
+Código MATLAB: Errores y Correcciones
+Conclusiones, Recomendaciones y Referencias
+Conversación con Gemini
+mira al inicio le puse 90 grados durante 30 segundos y lo deje completamente quieto , luego 180 y por ultimo 270 , en el eje tranverso de rodilla , quiero que el error durante ese tiempo , quiero que le elimines que cambie tanto al menos en este eje solo si varia cada un minimo 10 grados en menos de 5 segundos quiero muestre la variacion , necesito que modifiques el html:
+
+
+
+
+
+GenuTrack__7_.html
+
+html
+
+mira al inicio le puse 90 grados durante 30 segundos y lo deje completamente quieto , luego 180 y por ultimo 270 , en el eje tranverso de rodilla , quiero que el error durante ese tiempo , quiero que le elimines que cambie tanto al menos en este eje solo si varia cada un minimo 10 grados en menos de 5 segundos quiero muestre la variacion , necesito que modifiques el html
+
+esta es la tabla de valores veras :
+
+
+
+html :
+
+GenuTrack__7_.html
+
+42.14 KB•743 líneas
+
+•
+
+El formato puede ser inconsistente con la fuente
+
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>GenuTrack - Plataforma Universal</title>
+
+
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#2563eb">
+
+<link rel="apple-touch-icon" href="icono-192.png">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
+
+
+
+<style>
+
+:root {
+
+--primary: #2563eb; --primary-hover: #1d4ed8; --secondary: #64748b;
+
+--success: #10b981; --warning: #f59e0b; --danger: #ef4444;
+
+--dark: #0f172a; --light: #f8fafc; --border: #e2e8f0; --surface: #ffffff;
+
+}
+
+
+
+body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; color: var(--dark); margin: 0; padding: 2vh 2vw; height: 100vh; box-sizing: border-box; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+
+.screen { display: none; width: 100%; height: 100%; justify-content: center; align-items: center; animation: fadeIn 0.4s ease; }
+
+.screen.active { display: flex; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+
+
+/* INICIO */
+
+.home-container { background-color: var(--surface); padding: 50px 60px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; max-width: 800px; }
+
+.brand-title { font-size: 2.5rem; font-weight: 800; margin: 0 0 10px 0; }
+
+.brand-title span { color: var(--primary); }
+
+.mode-cards { display: flex; gap: 24px; justify-content: center; margin-top: 20px;}
+
+.mode-card { background-color: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 30px 24px; width: 280px; cursor: pointer; transition: all 0.2s; text-align: center; font-weight: bold; font-size: 1.2rem;}
+
+.mode-card:hover { border-color: var(--primary); transform: translateY(-2px); color: var(--primary);}
+
+
+
+/* DASHBOARD */
+
+.dashboard { background-color: var(--surface); border-radius: 16px; width: 100%; max-width: 1200px; height: 94vh; display: grid; grid-template-columns: 350px 1fr; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 20px 50px -20px rgba(15,23,42,0.18);}
+
+.sidebar { background-color: #f8fafc; border-right: 1px solid var(--border); padding: 24px; display: flex; flex-direction: column; overflow-y: auto; }
+
+.dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+
+.dash-header h2 { margin: 0; font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+
+.brand-badge { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, var(--primary), #1e40af); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800; flex-shrink: 0; }
+
+.header-right-group { display: flex; align-items: center; gap: 12px; }
+
+
+.battery-container { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 700; color: var(--secondary); opacity: 0.4; transition: opacity 0.3s; }
+
+.battery-container.connected { opacity: 1; }
+
+.battery-icon { width: 22px; height: 11px; border: 2px solid var(--secondary); border-radius: 3px; position: relative; padding: 1px; }
+
+.battery-icon::after { content: ''; position: absolute; right: -4px; top: 2px; width: 2px; height: 7px; background-color: var(--secondary); border-radius: 0 2px 2px 0; }
+
+.battery-level { height: 100%; background-color: var(--success); width: 0%; border-radius: 1px; transition: width 0.3s; }
+
+
+
+.section-title { font-size: 0.75rem; text-transform: uppercase; color: var(--secondary); font-weight: 700; margin-bottom: 8px; }
+
+.input-field { width: 100%; padding: 10px 12px; margin-bottom: 12px; border: 1px solid var(--border); border-radius: 6px; box-sizing: border-box; font-family: inherit;}
+
+
+.axis-selector { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; background: white; padding: 12px; border-radius: 8px; border: 1px solid var(--border);}
+
+.axis-selector label { font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 8px; cursor: pointer;}
+
+
+.cronometro { background-color: var(--dark); color: var(--success); padding: 16px; border-radius: 8px; font-family: monospace; font-size: 2.2rem; font-weight: 700; text-align: center; margin-bottom: 12px; }
+
+.btn { width: 100%; padding: 12px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; margin-bottom: 8px; transition: all 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
+
+.btn-connect { background-color: var(--dark); color: white; }
+
+.btn-connect:hover { background-color: #1e293b; }
+
+.btn-start { background-color: var(--primary); color: white; display: none; }
+
+.btn-start:hover { background-color: var(--primary-hover); }
+
+.btn-stop { background-color: var(--danger); color: white; display: none; }
+
+.btn-stop:hover { background-color: #dc2626; }
+
+.btn-outline { background-color: transparent; border: 1px solid var(--border); }
+
+.btn-outline:hover { border-color: var(--secondary); background-color: #f1f5f9; }
+
+.btn-encerar { background-color: #eff6ff; color: var(--primary); border: 1px solid #bfdbfe; margin-bottom: 24px;}
+
+.btn-encerar:hover { background-color: #dbeafe; }
+
+.btn-export { background-color: var(--success); color: white; box-shadow: 0 4px 10px -2px rgba(16,185,129,0.45); }
+
+.btn-export:hover { background-color: #0ea975; }
+
+
+
+/* MAIN PANEL */
+
+.main-panel { padding: 32px; display: flex; flex-direction: column; gap: 24px; overflow-y: auto; }
+
+.top-stats { display: flex; gap: 12px; }
+
+.stat-card { flex: 1; background-color: #f8fafc; border: 1px solid var(--border); border-top: 3px solid var(--primary); border-radius: 8px; padding: 16px 10px; text-align: center; transition: transform 0.15s ease; }
+
+.stat-card:hover { transform: translateY(-2px); }
+
+.stat-card:nth-child(2) { border-top-color: var(--secondary); }
+
+.stat-card:nth-child(3) { border-top-color: var(--warning); }
+
+.stat-card:nth-child(4) { border-top-color: var(--success); }
+
+.stat-value { font-size: 1.5rem; font-weight: 800; margin-top: 4px; }
+
+.center-visualization { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; flex: 1; }
+
+.angle-live-card { border: 1px solid var(--border); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; align-items: center; }
+
+.live-angle-text { font-size: 5rem; font-weight: 800; color: var(--primary); margin: auto 0;}
+
+
+/* SISTEMA DE BIOFEEDBACK DINÁMICO */
+
+.biofeedback-card { border: 1px solid var(--border); border-radius: 12px; display: flex; justify-content: center; align-items: center; background-color: #f8fafc; min-height: 250px; }
+
+.limb-container { position: relative; width: 150px; height: 200px; transition: all 0.3s;}
+
+
+.proximal-segment { background-color: #94a3b8; position: absolute; z-index: 2; transition: all 0.3s;}
+
+.distal-segment { background-color: #64748b; position: absolute; z-index: 1; transition: all 0.3s, transform 0.1s linear;}
+
+.joint { background-color: var(--primary); border: 3px solid white; border-radius: 50%; position: absolute; z-index: 4; transition: all 0.3s;}
+
+
+
+.sagital .proximal-segment { width: 30px; height: 90px; border-radius: 15px; left: 60px; top: 10px; }
+
+.sagital .distal-segment { width: 24px; height: 100px; border-radius: 12px; left: 63px; top: 90px; transform-origin: 12px 12px; }
+
+.sagital .joint { width: 20px; height: 20px; left: 50%; bottom: -4px; transform: translateX(-50%); }
+
+
+
+.frontal .proximal-segment { width: 44px; height: 90px; border-radius: 10px; left: 53px; top: 10px; }
+
+.frontal .distal-segment { width: 36px; height: 100px; border-radius: 10px; left: 57px; top: 90px; transform-origin: 18px 12px; }
+
+.frontal .joint { width: 44px; height: 20px; border-radius: 10px; left: 50%; bottom: 0; transform: translateX(-50%); border-width: 2px;}
+
+
+
+.transverso .proximal-segment { width: 70px; height: 70px; border-radius: 50%; left: 40px; top: 65px; }
+
+.transverso .distal-segment { width: 8px; height: 90px; border-radius: 4px; left: 71px; top: 100px; transform-origin: 4px 0px; }
+
+.transverso .joint { width: 20px; height: 20px; left: 50%; bottom: 50%; transform: translate(-50%, 50%); }
+
+
+
+.graph-container { border: 1px solid var(--border); border-radius: 12px; padding: 16px; height: 180px; display: flex; flex-direction: column; background: white;}
+
+canvas { flex: 1; width: 100%; display: block; }
+
+
+
+@media (max-width: 768px) {
+
+body { padding: 0; height: 100%; overflow-y: auto; }
+
+.dashboard { grid-template-columns: 1fr; height: auto; border: none; }
+
+.sidebar { border-right: none; border-bottom: 2px solid var(--border); padding: 20px 16px; }
+
+.main-panel { padding: 20px 16px; gap: 16px; overflow-y: visible; }
+
+.top-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.center-visualization { grid-template-columns: 1fr; gap: 16px; }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+
+<div id="screen-home" class="screen active">
+
+<div class="home-container">
+
+<h1 class="brand-title">Genu<span>Track</span> Clínico</h1>
+
+<p>Evaluación de la movilidad articular</p>
+
+<div class="mode-cards">
+
+<div class="mode-card" onclick="iniciarApp()">Ingresar a la Plataforma</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div id="screen-dashboard" class="screen">
+
+<div class="dashboard">
+
+<div class="sidebar">
+
+<div class="dash-header">
+
+<h2><span class="brand-badge">GT</span>GenuTrack</h2>
+
+<div class="header-right-group">
+
+<div class="battery-container" id="batContainer"><span id="batText">--%</span><div class="battery-icon"><div class="battery-level" id="batLevel"></div></div></div>
+
+</div>
+
+</div>
+
+
+
+<div class="section-title">Articulación a Evaluar</div>
+
+<select id="selectArticulacion" class="input-field" onchange="actualizarVisualizacion()">
+
+<option value="Rodilla">Rodilla</option>
+
+<option value="Codo">Codo</option>
+
+<option value="Hombro">Hombro</option>
+
+<option value="Columna Cervical">Columna Cervical</option>
+
+</select>
+
+
+
+<div class="section-title">Plano Osteocinemático</div>
+
+<div class="axis-selector">
+
+<label><input type="radio" name="eje" value="Z" checked onchange="actualizarVisualizacion()"> Sagital (Flexión/Extensión)</label>
+
+<label><input type="radio" name="eje" value="Y" onchange="actualizarVisualizacion()"> Frontal (Abducción/Aducción)</label>
+
+<label><input type="radio" name="eje" value="X" onchange="actualizarVisualizacion()"> Transverso (Rotación)</label>
+
+</div>
+
+
+<button class="btn btn-encerar" id="btnEncerar" onclick="encerarAngulo()">🎯 Establecer Cero Anatómico (0°)</button>
+
+
+
+<div class="section-title">Control de Sesión</div>
+
+<div class="patient-form">
+
+<input type="text" id="inNombre" class="input-field" placeholder="Nombre del paciente">
+
+</div>
+
+
+<div class="cronometro" id="tiempoPantalla">00:00</div>
+
+
+<div style="margin-top: auto;">
+
+<button class="btn btn-connect" id="btnConectar" onclick="conectarBluetooth()">Vincular Sensor BLE</button>
+
+<button class="btn btn-start" id="btnIniciar" onclick="iniciarTomaDatos()">Iniciar Grabación</button>
+
+<button class="btn btn-stop" id="btnDetener" onclick="detenerTomaDatos()">Finalizar Grabación</button>
+
+<button class="btn btn-export" id="btnDescargar" onclick="descargarExcel()" style="display: none;">📊 Exportar Reporte Excel (con gráfica)</button>
+
+<button class="btn btn-outline" id="btnRegresar" onclick="volverInicio()" style="margin-top:16px;">← Inicio</button>
+
+</div>
+
+</div>
+
+
+
+<div class="main-panel">
+
+<div class="top-stats">
+
+<div class="stat-card"><div class="section-title">ROM Máximo</div><div class="stat-value" id="statMax">0°</div></div>
+
+<div class="stat-card"><div class="section-title">ROM Mínimo</div><div class="stat-value" id="statMin">0°</div></div>
+
+<div class="stat-card"><div class="section-title">Velocidad</div><div class="stat-value" id="statVelocidad">0°/s</div></div>
+
+<div class="stat-card"><div class="section-title">Reps.</div><div class="stat-value" id="statReps">0</div></div>
+
+</div>
+
+
+
+<div class="center-visualization">
+
+<div class="angle-live-card">
+
+<div class="section-title" id="tituloEjeTexto">Plano Sagital (Flexo-Extensión)</div>
+
+<div class="live-angle-text" id="anguloPantalla">0<span>°</span></div>
+
+</div>
+
+
+<div class="biofeedback-card">
+
+<div class="limb-container sagital" id="contenedorPierna">
+
+<div class="proximal-segment"><div class="joint"></div></div>
+
+<div class="distal-segment" id="miembroAnimado"></div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="graph-container">
+
+<div class="section-title">Cinemática en Vivo</div>
+
+<canvas id="graficaAngulo"></canvas>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<script>
+
+let grabando = false;
+
+let bluetoothDevice, rxCharacteristic, bleBuffer = "";
+
+const SERVICE_UUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+
+const CHAR_TX_UUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+
+
+
+// El ESP32 ya calcula el porcentaje directamente sobre el voltaje real
+
+// de la batería, usando el rango 1.6V = 0% y 2.5V = 100% (ver
+
+// actualizarNivelBateria() en el firmware). El valor "B" que llega por
+
+// Bluetooth ya viene listo para mostrar, no hace falta re-escalarlo aquí.
+
+function recalibrarPorcentajeBateria(batCrudo) {
+
+return Math.max(0, Math.min(100, Math.round(batCrudo)));
+
+}
+
+
+
+let matrizClinica = [];
+
+let tiempoInicio = 0, cronometroInterval;
+
+let historialGrafica = new Array(100).fill(0);
+
+const canvas = document.getElementById('graficaAngulo');
+
+const ctx = canvas.getContext('2d');
+
+
+
+let maxAngulo = 0, minAngulo = 999;
+
+let anguloAnteriorJS = 0, tiempoAnteriorJS = 0, velocidadSuavizada = 0;
+
+
+
+let ejeActivo = 'Z';
+
+let ejeGrabado = 'Z'; // Plano "congelado" al presionar Iniciar Grabación: el reporte
+
+// exportado SIEMPRE usa este valor, no el que esté marcado en
+
+// pantalla en el momento de exportar (antes eran el mismo
+
+// valor y podían desincronizarse si cambiabas el plano después
+
+// de grabar, o al recargar).
+
+let rawX = 0, rawY = 0, rawZ = 0;
+
+let offsetX = 0, offsetY = 0, offsetZ = 0;
+
+
+
+// --- FILTROS Y ESTADOS ---
+
+let anguloSuavizado = 0;
+
+let anguloMostrarFinal = 0;
+
+const ALPHA_FILTRO = 0.18; // más alto = reacciona más rápido al volver a 0 (antes 0.10); sigue filtrando el temblor de la mano
+
+const BANDA_MUERTA = 2; // ignora cambios menores a 2° (tembores/ruido involuntario)
+
+
+
+// --- CORRECCIÓN DE DERIVA (evita que el ángulo se vaya solo con el sensor quieto) ---
+
+// El IMU acumula un pequeño error con el tiempo (deriva). Mientras el sensor está
+
+// realmente quieto, estos acumuladores "persiguen" la lectura cruda de cada eje y
+
+// se restan del ángulo mostrado, devolviéndolo a 0. En cuanto el paciente hace un
+
+// movimiento real (aunque sea lento), la corrección se congela y no le resta nada
+
+// al movimiento. Está basada en TIEMPO real (segundos), no en la cantidad de
+
+// mensajes BLE recibidos, así que converge igual de rápido sin importar qué tan
+
+// rápido mande datos el sensor.
+
+let derivaX = 0, derivaY = 0, derivaZ = 0;
+
+let tiempoUltimaDeriva = 0;
+
+let rechazosSeguidos = 0, signoUltimoRechazo = 0;
+
+const TAU_DERIVA = 1.2; // segundos: en ~3·TAU (≈3.6 s) la deriva queda prácticamente en 0 (antes 3 s / ≈9 s)
+
+
+
+// "¿Está quieto?" ya NO se decide por la velocidad instantánea (un movimiento lento y
+
+// controlado puede tener una velocidad instantánea muy baja entre dos muestras y
+
+// parecer "quieto" por error). En vez de eso, se mide cuánto cambió la señal en total
+
+// dentro de una ventana de tiempo: un giro real de 90°, aunque tarde varios segundos,
+
+// sí deja un rango amplio en esa ventana; la deriva del sensor, no.
+
+let historialQuietud = []; // { t, v } de los últimos VENTANA_QUIETUD segundos
+
+const VENTANA_QUIETUD = 3; // segundos de historial para juzgar si hay movimiento
+
+const UMBRAL_RANGO_QUIETO = 3; // ° — rango máximo dentro de la ventana para considerarse quieto
+
+
+
+// --- VARIABLES DE RESUMEN CLÍNICO ---
+
+let estadoRepeticion = 0;
+
+let repeticiones = 0;
+
+let sumaVelocidad = 0;
+
+let muestrasVelocidad = 0;
+
+let bufferROM = [];
+
+
+
+function iniciarApp() {
+
+document.getElementById('screen-home').classList.remove('active');
+
+document.getElementById('screen-dashboard').classList.add('active');
+
+dibujarGrafica();
+
+}
+
+
+
+function volverInicio() {
+
+if (grabando) return alert("Detén la toma de datos primero.");
+
+if(bluetoothDevice && bluetoothDevice.gatt.connected) bluetoothDevice.gatt.disconnect();
+
+document.getElementById('screen-dashboard').classList.remove('active');
+
+document.getElementById('screen-home').classList.add('active');
+
+}
+
+
+
+function actualizarVisualizacion() {
+
+ejeActivo = document.querySelector('input[name="eje"]:checked').value;
+
+let contenedor = document.getElementById('contenedorPierna');
+
+let titulo = document.getElementById('tituloEjeTexto');
+
+
+if(ejeActivo === 'Z') {
+
+contenedor.className = "limb-container sagital";
+
+titulo.innerText = "Plano Sagital (Flexión/Extensión)";
+
+} else if(ejeActivo === 'Y') {
+
+contenedor.className = "limb-container frontal";
+
+titulo.innerText = "Plano Frontal (Abducción/Aducción)";
+
+} else if(ejeActivo === 'X') {
+
+contenedor.className = "limb-container transverso";
+
+titulo.innerText = "Plano Transverso (Rotación)";
+
+}
+
+
+document.getElementById('miembroAnimado').style.transform = "rotate(0deg)";
+
+historialQuietud = []; // el eje cambió: se reinicia la ventana de "¿está quieto?"
+
+}
+
+
+
+function encerarAngulo() {
+
+offsetX = rawX; offsetY = rawY; offsetZ = rawZ;
+
+anguloSuavizado = 0;
+
+anguloMostrarFinal = 0;
+
+derivaX = 0; derivaY = 0; derivaZ = 0;
+
+tiempoUltimaDeriva = 0;
+
+rechazosSeguidos = 0; signoUltimoRechazo = 0;
+
+historialQuietud = [];
+
+let btn = document.getElementById('btnEncerar');
+
+btn.innerHTML = "✅ Cero Anatómico Guardado";
+
+btn.style.backgroundColor = "var(--success)";
+
+btn.style.color = "white";
+
+setTimeout(() => {
+
+btn.innerHTML = "🎯 Establecer Cero Anatómico (0°)";
+
+btn.style.backgroundColor = "#eff6ff";
+
+btn.style.color = "var(--primary)";
+
+}, 2000);
+
+}
+
+
+
+async function conectarBluetooth() {
+
+try {
+
+bluetoothDevice = await navigator.bluetooth.requestDevice({
+
+filters: [{ name: 'GenuTrack-BLE' }], optionalServices: [SERVICE_UUID]
+
+});
+
+bluetoothDevice.addEventListener('gattserverdisconnected', onDisconnectBLE);
+
+const server = await bluetoothDevice.gatt.connect();
+
+const service = await server.getPrimaryService(SERVICE_UUID);
+
+rxCharacteristic = await service.getCharacteristic(CHAR_TX_UUID);
+
+await rxCharacteristic.startNotifications();
+
+rxCharacteristic.addEventListener('characteristicvaluechanged', handleIncomingData);
+
+
+
+document.getElementById('batContainer').classList.add('connected');
+
+document.getElementById('btnConectar').style.display = "none";
+
+document.getElementById('btnIniciar').style.display = "flex";
+
+} catch (error) { alert("Error de conexión al Bluetooth."); }
+
+}
+
+
+
+function onDisconnectBLE() {
+
+if(grabando) detenerTomaDatos();
+
+document.getElementById('batContainer').classList.remove('connected');
+
+document.getElementById('btnIniciar').style.display = "none";
+
+document.getElementById('btnConectar').style.display = "flex";
+
+}
+
+
+
+function handleIncomingData(event) {
+
+bleBuffer += new TextDecoder().decode(event.target.value);
+
+let lines = bleBuffer.split('\n');
+
+for (let i = 0; i < lines.length - 1; i++) {
+
+let line = lines[i].trim();
+
+let match = line.match(/X:([\-\d\.]+)\s+Y:([\-\d\.]+)\s+Z:([\-\d\.]+)\s+B:(\d+)/);
+
+if(match) {
+
+rawX = parseFloat(match[1]);
+
+rawY = parseFloat(match[2]);
+
+rawZ = parseFloat(match[3]);
+
+
+let bat = recalibrarPorcentajeBateria(parseInt(match[4]));
+
+document.getElementById('batText').innerText = bat + "%";
+
+document.getElementById('batLevel').style.width = bat + "%";
+
+document.getElementById('batLevel').style.backgroundColor = bat > 50 ? "var(--success)" : (bat > 20 ? "var(--warning)" : "var(--danger)");
+
+
+
+const ahoraDeriva = Date.now();
+
+let dtDeriva = (ahoraDeriva - tiempoUltimaDeriva) / 1000;
+
+if (tiempoUltimaDeriva === 0 || dtDeriva > 2) dtDeriva = 0.1; // primer dato o reconexión: paso pequeño
+
+const dtSeguro = Math.max(dtDeriva, 0.02);
+
+
+
+// Calcula el ángulo candidato SIN aún tocar la corrección de deriva,
+
+// para poder juzgar si es un dato válido antes de dejarlo entrar al filtro.
+
+let anguloCandidato = 0;
+
+if(ejeActivo === 'Z') anguloCandidato = (rawZ - offsetZ) - derivaZ;
+
+if(ejeActivo === 'Y') anguloCandidato = (rawY - offsetY) - derivaY;
+
+if(ejeActivo === 'X') anguloCandidato = (rawX - offsetX) - derivaX;
+
+
+
+// "¿Está quieto de verdad?" — en vez de mirar solo la velocidad instantánea
+
+// (que en un movimiento lento y controlado puede parecer casi cero entre
+
+// una muestra y otra), miramos cuánto se movió la señal en total durante
+
+// los últimos segundos. Un movimiento real de 90°, aunque sea lento, sí
+
+// deja un rango amplio en esa ventana; la deriva del sensor, no.
+
+historialQuietud.push({ t: ahoraDeriva, v: anguloCandidato });
+
+while (historialQuietud.length && (ahoraDeriva - historialQuietud[0].t) > VENTANA_QUIETUD * 1000) {
+
+historialQuietud.shift();
+
+}
+
+let rangoReciente = 0;
+
+if (historialQuietud.length > 1) {
+
+const valores = historialQuietud.map(e => e.v);
+
+rangoReciente = Math.max(...valores) - Math.min(...valores);
+
+}
+
+const estaQuieto = rangoReciente < UMBRAL_RANGO_QUIETO;
+
+
+
+// FILTRO ANTI-GOLPE: un toque, palmada o vibración en la mesa produce un
+
+// pico de aceleración instantáneo. La diferencia clave con un giro real
+
+// (aunque sea rápido) es que el golpe es UN salto aislado que enseguida
+
+// "rebota" de vuelta, mientras que un giro real sostiene el cambio en la
+
+// misma dirección durante varias muestras seguidas. Por eso: si la muestra
+
+// parece un salto imposible, se descarta UNA vez; pero si la siguiente
+
+// muestra confirma que el cambio sigue en la misma dirección, se acepta como
+
+// movimiento real (para no recortar giros rápidos genuinos, como una
+
+// rotación transversal hecha con la mano).
+
+const VELOCIDAD_MAX_FISIOLOGICA = 900; // °/s — por encima de cualquier giro voluntario, pero atrapa golpes/vibración
+
+const velocidadImplicita = Math.abs(anguloCandidato - anguloSuavizado) / dtSeguro;
+
+const signoSalto = Math.sign(anguloCandidato - anguloSuavizado);
+
+
+
+if (velocidadImplicita > VELOCIDAD_MAX_FISIOLOGICA) {
+
+const esConfirmado = (rechazosSeguidos > 0 && signoSalto === signoUltimoRechazo);
+
+if (!esConfirmado) {
+
+rechazosSeguidos++;
+
+signoUltimoRechazo = signoSalto;
+
+tiempoUltimaDeriva = ahoraDeriva;
+
+continue; // primer salto grande: se trata como posible golpe y se descarta
+
+}
+
+// segunda muestra seguida en la misma dirección: es un giro real, se deja pasar
+
+}
+
+rechazosSeguidos = 0;
+
+tiempoUltimaDeriva = ahoraDeriva;
+
+
+
+// Mientras el sensor está REALMENTE quieto (según el rango reciente, no solo
+
+// la velocidad instantánea), la corrección de deriva persigue la lectura
+
+// cruda de cada eje, escalada por el tiempo real transcurrido. Si el
+
+// paciente se está moviendo de verdad —aunque sea despacio— se congela y no
+
+// le resta ni un grado al movimiento real.
+
+if (estaQuieto) {
+
+const factor = 1 - Math.exp(-dtDeriva / TAU_DERIVA);
+
+derivaX += ((rawX - offsetX) - derivaX) * factor;
+
+derivaY += ((rawY - offsetY) - derivaY) * factor;
+
+derivaZ += ((rawZ - offsetZ) - derivaZ) * factor;
+
+}
+
+
+
+let anguloBruto = 0;
+
+if(ejeActivo === 'Z') anguloBruto = (rawZ - offsetZ) - derivaZ;
+
+if(ejeActivo === 'Y') anguloBruto = (rawY - offsetY) - derivaY;
+
+if(ejeActivo === 'X') anguloBruto = (rawX - offsetX) - derivaX;
+
+
+anguloSuavizado = (ALPHA_FILTRO * anguloBruto) + ((1 - ALPHA_FILTRO) * anguloSuavizado);
+
+let anguloEntero = Math.round(anguloSuavizado);
+
+
+
+if (Math.abs(anguloEntero - anguloMostrarFinal) >= BANDA_MUERTA) {
+
+anguloMostrarFinal = anguloEntero;
+
+}
+
+
+procesarDatoReal(anguloMostrarFinal);
+
+}
+
+}
+
+bleBuffer = lines[lines.length - 1];
+
+}
+
+
+
+function procesarDatoReal(angulo) {
+
+let angAbs = Math.abs(angulo);
+
+document.getElementById('anguloPantalla').innerHTML = `${angAbs}<span>°</span>`;
+
+
+let giroAnimacion = (ejeActivo === 'Z') ? -angulo : angulo;
+
+document.getElementById('miembroAnimado').style.transform = `rotate(${giroAnimacion}deg)`;
+
+
+
+historialGrafica.shift();
+
+historialGrafica.push(angAbs);
+
+dibujarGrafica();
+
+
+
+let tiempoAct = Date.now();
+
+if (tiempoAnteriorJS > 0 && (tiempoAct - tiempoAnteriorJS)/1000.0 > 0.02) {
+
+let vel = Math.abs((angulo - anguloAnteriorJS) / ((tiempoAct - tiempoAnteriorJS)/1000.0));
+
+velocidadSuavizada = (velocidadSuavizada * 0.8) + (vel * 0.2);
+
+let velRedondeada = Math.round(velocidadSuavizada);
+
+document.getElementById('statVelocidad').innerText = velRedondeada + "°/s";
+
+
+if (grabando && velRedondeada > 0) {
+
+sumaVelocidad += velRedondeada;
+
+muestrasVelocidad++;
+
+}
+
+}
+
+anguloAnteriorJS = angulo; tiempoAnteriorJS = tiempoAct;
+
+
+
+if (grabando) {
+
+matrizClinica.push([(Date.now() - tiempoInicio)/1000, (rawX - offsetX) - derivaX, (rawY - offsetY) - derivaY, (rawZ - offsetZ) - derivaZ]);
+
+
+bufferROM.push(angAbs);
+
+if (bufferROM.length > 10) { bufferROM.shift(); }
+
+
+
+if (bufferROM.length === 10) {
+
+let minEnBuffer = Math.min(...bufferROM);
+
+let maxEnBuffer = Math.max(...bufferROM);
+
+
+
+if (minEnBuffer > maxAngulo) {
+
+maxAngulo = minEnBuffer;
+
+document.getElementById('statMax').innerText = maxAngulo + "°";
+
+}
+
+
+
+if (maxEnBuffer < minAngulo && (Date.now() - tiempoInicio) > 500) {
+
+minAngulo = maxEnBuffer;
+
+document.getElementById('statMin').innerText = minAngulo + "°";
+
+}
+
+}
+
+
+if (estadoRepeticion === 0 && angAbs >= 30) {
+
+estadoRepeticion = 1;
+
+} else if (estadoRepeticion === 1 && angAbs <= 15) {
+
+estadoRepeticion = 0;
+
+repeticiones++;
+
+document.getElementById('statReps').innerText = repeticiones;
+
+}
+
+}
+
+}
+
+
+
+function iniciarTomaDatos() {
+
+if (document.getElementById('inNombre').value.trim() === "") return alert("Por favor, ingresa el nombre del paciente.");
+
+document.getElementById('btnIniciar').style.display = "none";
+
+document.getElementById('btnDetener').style.display = "flex";
+
+document.getElementById('btnDescargar').style.display = "none";
+
+
+matrizClinica = []; bufferROM = [];
+
+maxAngulo = 0; minAngulo = 999;
+
+repeticiones = 0; estadoRepeticion = 0;
+
+sumaVelocidad = 0; muestrasVelocidad = 0;
+
+
+document.getElementById('statMax').innerText = "0°";
+
+document.getElementById('statMin').innerText = "0°";
+
+document.getElementById('statReps').innerText = "0";
+
+
+
+ejeGrabado = ejeActivo; // Congela el plano: el reporte exportado reflejará
+
+// siempre este plano, sin importar qué se seleccione después.
+
+document.querySelectorAll('input[name="eje"]').forEach(r => r.disabled = true);
+
+
+
+tiempoInicio = Date.now();
+
+grabando = true;
+
+
+
+cronometroInterval = setInterval(() => {
+
+let segs = Math.floor((Date.now() - tiempoInicio) / 1000);
+
+let minutos = Math.floor(segs / 60);
+
+let segundosRestantes = segs % 60;
+
+document.getElementById('tiempoPantalla').innerText = minutos.toString().padStart(2,'0') + ":" + segundosRestantes.toString().padStart(2,'0');
+
+}, 1000);
+
+}
+
+
+
+function detenerTomaDatos() {
+
+grabando = false;
+
+clearInterval(cronometroInterval);
+
+document.getElementById('btnDetener').style.display = "none";
+
+document.getElementById('btnIniciar').style.display = "flex";
+
+document.getElementById('btnDescargar').style.display = "flex";
+
+document.querySelectorAll('input[name="eje"]').forEach(r => r.disabled = false);
+
+
+if (minAngulo === 999) { minAngulo = 0; document.getElementById('statMin').innerText = "0°"; }
+
+}
+
+
+
+function dibujarGrafica() {
+
+canvas.width = canvas.parentElement.clientWidth - 32;
+
+canvas.height = canvas.parentElement.clientHeight - 40;
+
+ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+ctx.strokeStyle = '#2563eb'; ctx.lineWidth = 3; ctx.beginPath();
+
+for (let i = 0; i < 100; i++) {
+
+let x = (i / 99) * canvas.width;
+
+let y = canvas.height - ((historialGrafica[i] / 180) * canvas.height);
+
+if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+
+}
+
+ctx.stroke();
+
+}
+
+
+
+// Dibuja, en un canvas independiente y de alta resolución, la misma gráfica de
+
+// dispersión (tiempo vs. ángulo) que antes había que armar a mano en Excel con
+
+// Alt+F1. Devuelve un PNG en base64 listo para incrustarse en el libro.
+
+function generarImagenGrafica(puntos, nombrePlano) {
+
+const width = 900, height = 460;
+
+const lienzo = document.createElement('canvas');
+
+lienzo.width = width; lienzo.height = height;
+
+const g = lienzo.getContext('2d');
+
+
+
+g.fillStyle = '#ffffff';
+
+g.fillRect(0, 0, width, height);
+
+
+
+const pad = { left: 60, right: 30, top: 55, bottom: 55 };
+
+const plotW = width - pad.left - pad.right;
+
+const plotH = height - pad.top - pad.bottom;
+
+
+
+const tiempos = puntos.map(p => p.t);
+
+const angulos = puntos.map(p => p.a);
+
+const tMax = Math.max(...tiempos, 1);
+
+const aMax = Math.max(...angulos, 10);
+
+
+
+g.fillStyle = '#0f172a';
+
+g.font = 'bold 20px Arial';
+
+g.textAlign = 'center';
+
+g.fillText('Ángulo (Grados)', width / 2, 28);
+
+if (nombrePlano) {
+
+g.fillStyle = '#2563eb';
+
+g.font = '13px Arial';
+
+g.fillText('Plano: ' + nombrePlano, width / 2, 46);
+
+}
+
+
+
+// Cuadrícula y etiquetas del eje Y
+
+g.font = '12px Arial';
+
+const pasosY = 5;
+
+for (let i = 0; i <= pasosY; i++) {
+
+const valor = aMax - (aMax / pasosY) * i;
+
+const y = pad.top + (plotH / pasosY) * i;
+
+g.strokeStyle = '#e2e8f0'; g.lineWidth = 1;
+
+g.beginPath(); g.moveTo(pad.left, y); g.lineTo(width - pad.right, y); g.stroke();
+
+g.fillStyle = '#64748b'; g.textAlign = 'right';
+
+g.fillText(Math.round(valor), pad.left - 8, y + 4);
+
+}
+
+
+
+// Cuadrícula y etiquetas del eje X
+
+const pasosX = 6;
+
+for (let i = 0; i <= pasosX; i++) {
+
+const valor = (tMax / pasosX) * i;
+
+const x = pad.left + (plotW / pasosX) * i;
+
+g.strokeStyle = '#e2e8f0'; g.lineWidth = 1;
+
+g.beginPath(); g.moveTo(x, pad.top); g.lineTo(x, height - pad.bottom); g.stroke();
+
+g.fillStyle = '#64748b'; g.textAlign = 'center';
+
+g.fillText(valor.toFixed(1), x, height - pad.bottom + 18);
+
+}
+
+
+
+// Ejes
+
+g.strokeStyle = '#94a3b8'; g.lineWidth = 1.5;
+
+g.beginPath();
+
+g.moveTo(pad.left, pad.top);
+
+g.lineTo(pad.left, height - pad.bottom);
+
+g.lineTo(width - pad.right, height - pad.bottom);
+
+g.stroke();
+
+
+
+const escalaX = t => pad.left + (t / tMax) * plotW;
+
+const escalaY = a => pad.top + plotH - (a / aMax) * plotH;
+
+
+
+// Línea de tendencia + marcadores (misma estética que un gráfico de
+
+// dispersión con líneas, como el que se armaba manualmente)
+
+g.strokeStyle = '#2563eb'; g.lineWidth = 1.5;
+
+g.beginPath();
+
+puntos.forEach((p, i) => {
+
+const x = escalaX(p.t), y = escalaY(p.a);
+
+if (i === 0) g.moveTo(x, y); else g.lineTo(x, y);
+
+});
+
+g.stroke();
+
+
+
+g.fillStyle = '#2563eb';
+
+puntos.forEach(p => {
+
+g.beginPath();
+
+g.arc(escalaX(p.t), escalaY(p.a), 2.6, 0, Math.PI * 2);
+
+g.fill();
+
+});
+
+
+
+// Títulos de los ejes
+
+g.fillStyle = '#334155'; g.font = '13px Arial'; g.textAlign = 'center';
+
+g.fillText('Tiempo (segundos)', width / 2, height - 12);
+
+g.save();
+
+g.translate(18, height / 2);
+
+g.rotate(-Math.PI / 2);
+
+g.fillText('Ángulo (°)', 0, 0);
+
+g.restore();
+
+
+
+return lienzo.toDataURL('image/png');
+
+}
+
+
+
+// Genera y descarga un único archivo .xlsx: datos, resumen clínico y la
+
+// gráfica de dispersión ya insertada como imagen — sin pasos manuales en Excel.
+
+async function descargarExcel() {
+
+const btn = document.getElementById('btnDescargar');
+
+const textoOriginal = btn.innerHTML;
+
+btn.innerHTML = "⏳ Generando reporte...";
+
+btn.disabled = true;
+
+
+
+try {
+
+const nombrePaciente = document.getElementById('inNombre').value || 'Paciente';
+
+const articulacion = document.getElementById('selectArticulacion').value;
+
+const velPromedio = muestrasVelocidad > 0 ? Math.round(sumaVelocidad / muestrasVelocidad) : 0;
+
+
+
+let nombreEjeExportar = "";
+
+if (ejeGrabado === 'Z') nombreEjeExportar = "Sagital (Flexión/Extensión)";
+
+else if (ejeGrabado === 'Y') nombreEjeExportar = "Frontal (Abducción/Aducción)";
+
+else if (ejeGrabado === 'X') nombreEjeExportar = "Transverso (Rotación)";
+
+
+
+// Usa el plano CONGELADO al iniciar la grabación (ejeGrabado), NO el que
+
+// esté marcado ahora mismo en pantalla (ejeActivo). Así el Excel siempre
+
+// corresponde a lo que realmente se grabó, aunque después cambies de plano.
+
+const puntos = matrizClinica.map(f => {
+
+let valorEje = 0;
+
+if (ejeGrabado === 'Z') valorEje = f[3];
+
+else if (ejeGrabado === 'Y') valorEje = f[2];
+
+else if (ejeGrabado === 'X') valorEje = f[1];
+
+return { t: f[0], a: Math.round(Math.abs(valorEje)) };
+
+});
+
+
+
+const imagenGrafica = generarImagenGrafica(puntos.length ? puntos : [{ t: 0, a: 0 }], nombreEjeExportar);
+
+
+
+const workbook = new ExcelJS.Workbook();
+
+workbook.creator = 'GenuTrack';
+
+workbook.created = new Date();
+
+const hoja = workbook.addWorksheet('Reporte GenuTrack');
+
+
+
+hoja.columns = [
+
+{ key: 'a', width: 26 }, { key: 'b', width: 22 }, { key: 'c', width: 3 },
+
+{ key: 'd', width: 10 }, { key: 'e', width: 10 }, { key: 'f', width: 10 },
+
+{ key: 'g', width: 10 }, { key: 'h', width: 10 }, { key: 'i', width: 10 }
+
+];
+
+
+
+hoja.mergeCells('A1:I1');
+
+const titulo = hoja.getCell('A1');
+
+titulo.value = 'REPORTE OSTEOCINEMÁTICO — GenuTrack';
+
+titulo.font = { bold: true, size: 16, color: { argb: 'FF2563EB' } };
+
+hoja.getRow(1).height = 28;
+
+
+
+hoja.addRow([]);
+
+hoja.addRow(['Paciente:', nombrePaciente]);
+
+hoja.addRow(['Articulación:', articulacion]);
+
+hoja.addRow(['Plano evaluado:', nombreEjeExportar]);
+
+hoja.addRow([]);
+
+
+
+const filaResumen = hoja.addRow(['RESUMEN DE SESIÓN']);
+
+filaResumen.font = { bold: true, color: { argb: 'FF0F172A' } };
+
+hoja.addRow(['ROM máximo alcanzado (validado por 1s)', maxAngulo + '°']);
+
+hoja.addRow(['ROM mínimo (validado por 1s)', minAngulo + '°']);
+
+hoja.addRow(['Velocidad promedio', velPromedio + '°/s']);
+
+hoja.addRow(['Número de repeticiones', repeticiones]);
+
+hoja.addRow([]);
+
+
+
+const filaTabla = hoja.addRow(['Tiempo (s)', 'Ángulo (°)']);
+
+filaTabla.eachCell(c => {
+
+c.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+
+c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF2563EB' } };
+
+});
+
+
+
+puntos.forEach(p => hoja.addRow([Number(p.t.toFixed(2)), p.a]));
+
+
+
+[3, 4, 5, 7, 8, 9, 10, 11].forEach(fila => {
+
+hoja.getCell('A' + fila).font = { bold: true };
+
+});
+
+
+
+// La gráfica queda incrustada como imagen desde el primer momento:
+
+// se abre el archivo y ya está lista, sin seleccionar datos ni Insertar > Gráfico.
+
+const imageId = workbook.addImage({ base64: imagenGrafica, extension: 'png' });
+
+hoja.addImage(imageId, { tl: { col: 3, row: 1 }, ext: { width: 540, height: 276 } });
+
+
+
+const buffer = await workbook.xlsx.writeBuffer();
+
+const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+const link = document.createElement('a');
+
+link.href = URL.createObjectURL(blob);
+
+link.download = `GenuTrack_Reporte_${nombrePaciente}.xlsx`;
+
+link.click();
+
+} catch (err) {
+
+console.error(err);
+
+alert('No se pudo generar el reporte de Excel.');
+
+} finally {
+
+btn.innerHTML = textoOriginal;
+
+btn.disabled = false;
+
+}
+
+}
+
+</script>
+
+</body>
+
+</html>
+
+El problema de caída "escalonada" en el eje transverso (rotación) que se observa en tu gráfica es provocado por el algoritmo de "corrección de deriva" (derivaX). Cuando dejas la pierna o el dispositivo completamente quieto a 90°, 180° o 270°, el sistema detecta que está "en reposo" (estaQuieto = true) e intenta forzar gradualmente el ángulo de regreso a 0° restándole los grados acumulados.
+
+Para solucionar esto específicamente en el eje X, he desactivado el retorno a cero agresivo cuando este eje está activo y lo he reemplazado por la lógica de validación que solicitaste:
+
+Filtro de ventana de 5 segundos: Se creó un historial dinámico (historialX_mov) que guarda las lecturas brutas.
+
+Umbral de 10°: El sistema evalúa la diferencia entre el valor máximo y el valor mínimo dentro de esos últimos 5 segundos.
+
+Congelamiento anti-deriva: Si la variación es menor a 10 grados (es decir, lo dejaste completamente quieto o solo sufre el "drift" natural paulatino del Yaw del sensor), el sistema congela por completo el ángulo en su último valor real, evitando que caiga. Cuando inicias un movimiento deliberado (variación >= 10°), se actualiza y sigue el movimiento de manera fluida.
+
+Este filtro impacta simultáneamente a la visualización de la pantalla en vivo y a los datos de la matriz que luego exportas, garantizando que el Excel resultante salga sin esos escalones hacia abajo.
+
+Tu archivo HTML modificado está listo:
+Icono de HTML
+GenuTrack_v8
+ HTML 
+Abierto
+
+
+
+
+Gemini es una IA y puede cometer errores.
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -8,6 +1563,7 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2563eb">
     <link rel="apple-touch-icon" href="icono-192.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
 
     <style>
         :root {
@@ -30,10 +1586,11 @@
         .mode-card:hover { border-color: var(--primary); transform: translateY(-2px); color: var(--primary);}
 
         /* DASHBOARD */
-        .dashboard { background-color: var(--surface); border-radius: 16px; width: 100%; max-width: 1200px; height: 94vh; display: grid; grid-template-columns: 350px 1fr; border: 1px solid var(--border); overflow: hidden;}
+        .dashboard { background-color: var(--surface); border-radius: 16px; width: 100%; max-width: 1200px; height: 94vh; display: grid; grid-template-columns: 350px 1fr; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 20px 50px -20px rgba(15,23,42,0.18);}
         .sidebar { background-color: #f8fafc; border-right: 1px solid var(--border); padding: 24px; display: flex; flex-direction: column; overflow-y: auto; }
         .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-        .dash-header h2 { margin: 0; font-size: 1.5rem; font-weight: 800; }
+        .dash-header h2 { margin: 0; font-size: 1.5rem; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        .brand-badge { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, var(--primary), #1e40af); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800; flex-shrink: 0; }
         .header-right-group { display: flex; align-items: center; gap: 12px; }
         
         .battery-container { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 700; color: var(--secondary); opacity: 0.4; transition: opacity 0.3s; }
@@ -48,18 +1605,29 @@
         .axis-selector { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; background: white; padding: 12px; border-radius: 8px; border: 1px solid var(--border);}
         .axis-selector label { font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 8px; cursor: pointer;}
         
-        .cronometro { background-color: var(--dark); color: var(--success); padding: 16px; border-radius: 8px; font-family: monospace; font-size: 2rem; font-weight: 700; text-align: center; margin-bottom: 12px; }
-        .btn { width: 100%; padding: 12px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; margin-bottom: 8px; transition: all 0.2s; display: flex; justify-content: center; gap: 8px; }
+        .cronometro { background-color: var(--dark); color: var(--success); padding: 16px; border-radius: 8px; font-family: monospace; font-size: 2.2rem; font-weight: 700; text-align: center; margin-bottom: 12px; }
+        .btn { width: 100%; padding: 12px; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; margin-bottom: 8px; transition: all 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
         .btn-connect { background-color: var(--dark); color: white; }
+        .btn-connect:hover { background-color: #1e293b; }
         .btn-start { background-color: var(--primary); color: white; display: none; }
+        .btn-start:hover { background-color: var(--primary-hover); }
         .btn-stop { background-color: var(--danger); color: white; display: none; }
+        .btn-stop:hover { background-color: #dc2626; }
         .btn-outline { background-color: transparent; border: 1px solid var(--border); }
+        .btn-outline:hover { border-color: var(--secondary); background-color: #f1f5f9; }
         .btn-encerar { background-color: #eff6ff; color: var(--primary); border: 1px solid #bfdbfe; margin-bottom: 24px;}
+        .btn-encerar:hover { background-color: #dbeafe; }
+        .btn-export { background-color: var(--success); color: white; box-shadow: 0 4px 10px -2px rgba(16,185,129,0.45); }
+        .btn-export:hover { background-color: #0ea975; }
 
         /* MAIN PANEL */
         .main-panel { padding: 32px; display: flex; flex-direction: column; gap: 24px; overflow-y: auto; }
         .top-stats { display: flex; gap: 12px; }
-        .stat-card { flex: 1; background-color: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 16px 10px; text-align: center; }
+        .stat-card { flex: 1; background-color: #f8fafc; border: 1px solid var(--border); border-top: 3px solid var(--primary); border-radius: 8px; padding: 16px 10px; text-align: center; transition: transform 0.15s ease; }
+        .stat-card:hover { transform: translateY(-2px); }
+        .stat-card:nth-child(2) { border-top-color: var(--secondary); }
+        .stat-card:nth-child(3) { border-top-color: var(--warning); }
+        .stat-card:nth-child(4) { border-top-color: var(--success); }
         .stat-value { font-size: 1.5rem; font-weight: 800; margin-top: 4px; }
         .center-visualization { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; flex: 1; }
         .angle-live-card { border: 1px solid var(--border); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; align-items: center; }
@@ -73,22 +1641,19 @@
         .distal-segment { background-color: #64748b; position: absolute; z-index: 1; transition: all 0.3s, transform 0.1s linear;}
         .joint { background-color: var(--primary); border: 3px solid white; border-radius: 50%; position: absolute; z-index: 4; transition: all 0.3s;}
 
-        /* PLANO SAGITAL (Flexión/Extensión) - VISTA DE PERFIL */
         .sagital .proximal-segment { width: 30px; height: 90px; border-radius: 15px; left: 60px; top: 10px; }
         .sagital .distal-segment { width: 24px; height: 100px; border-radius: 12px; left: 63px; top: 90px; transform-origin: 12px 12px; }
         .sagital .joint { width: 20px; height: 20px; left: 50%; bottom: -4px; transform: translateX(-50%); }
 
-        /* PLANO FRONTAL (Abducción/Aducción) - VISTA DE FRENTE */
         .frontal .proximal-segment { width: 44px; height: 90px; border-radius: 10px; left: 53px; top: 10px; }
         .frontal .distal-segment { width: 36px; height: 100px; border-radius: 10px; left: 57px; top: 90px; transform-origin: 18px 12px; }
         .frontal .joint { width: 44px; height: 20px; border-radius: 10px; left: 50%; bottom: 0; transform: translateX(-50%); border-width: 2px;}
 
-        /* PLANO TRANSVERSO (Rotación) - VISTA DESDE ARRIBA */
         .transverso .proximal-segment { width: 70px; height: 70px; border-radius: 50%; left: 40px; top: 65px; }
         .transverso .distal-segment { width: 8px; height: 90px; border-radius: 4px; left: 71px; top: 100px; transform-origin: 4px 0px; }
         .transverso .joint { width: 20px; height: 20px; left: 50%; bottom: 50%; transform: translate(-50%, 50%); }
 
-        .graph-container { border: 1px solid var(--border); border-radius: 12px; padding: 16px; height: 180px; display: flex; flex-direction: column; }
+        .graph-container { border: 1px solid var(--border); border-radius: 12px; padding: 16px; height: 180px; display: flex; flex-direction: column; background: white;}
         canvas { flex: 1; width: 100%; display: block; }
 
         @media (max-width: 768px) {
@@ -117,7 +1682,7 @@
         <div class="dashboard">
             <div class="sidebar">
                 <div class="dash-header">
-                    <h2>GenuTrack</h2>
+                    <h2><span class="brand-badge">GT</span>GenuTrack</h2>
                     <div class="header-right-group">
                         <div class="battery-container" id="batContainer"><span id="batText">--%</span><div class="battery-icon"><div class="battery-level" id="batLevel"></div></div></div>
                     </div>
@@ -125,15 +1690,14 @@
 
                 <div class="section-title">Articulación a Evaluar</div>
                 <select id="selectArticulacion" class="input-field" onchange="actualizarVisualizacion()">
-                    <option value="rodilla">Rodilla</option>
-                    <option value="codo">Codo</option>
-                    <option value="hombro">Hombro</option>
-                    <option value="cuello">Columna Cervical</option>
+                    <option value="Rodilla">Rodilla</option>
+                    <option value="Codo">Codo</option>
+                    <option value="Hombro">Hombro</option>
+                    <option value="Columna Cervical">Columna Cervical</option>
                 </select>
 
                 <div class="section-title">Plano Osteocinemático</div>
                 <div class="axis-selector">
-                    <!-- SE INVIRTIERON Z Y X SEGÚN LA POSICIÓN FÍSICA DE TU SENSOR -->
                     <label><input type="radio" name="eje" value="Z" checked onchange="actualizarVisualizacion()"> Sagital (Flexión/Extensión)</label>
                     <label><input type="radio" name="eje" value="Y" onchange="actualizarVisualizacion()"> Frontal (Abducción/Aducción)</label>
                     <label><input type="radio" name="eje" value="X" onchange="actualizarVisualizacion()"> Transverso (Rotación)</label>
@@ -146,13 +1710,13 @@
                     <input type="text" id="inNombre" class="input-field" placeholder="Nombre del paciente">
                 </div>
                 
-                <div class="cronometro" id="tiempoPantalla">00:00.0</div>
+                <div class="cronometro" id="tiempoPantalla">00:00</div>
                 
                 <div style="margin-top: auto;">
                     <button class="btn btn-connect" id="btnConectar" onclick="conectarBluetooth()">Vincular Sensor BLE</button>
                     <button class="btn btn-start" id="btnIniciar" onclick="iniciarTomaDatos()">Iniciar Grabación</button>
                     <button class="btn btn-stop" id="btnDetener" onclick="detenerTomaDatos()">Finalizar Grabación</button>
-                    <button class="btn btn-outline" id="btnDescargar" onclick="descargarExcel()" style="display: none;">Exportar Reporte (.csv)</button>
+                    <button class="btn btn-export" id="btnDescargar" onclick="descargarExcel()" style="display: none;">📊 Exportar Reporte Excel (con gráfica)</button>
                     <button class="btn btn-outline" id="btnRegresar" onclick="volverInicio()" style="margin-top:16px;">← Inicio</button>
                 </div>
             </div>
@@ -162,6 +1726,7 @@
                     <div class="stat-card"><div class="section-title">ROM Máximo</div><div class="stat-value" id="statMax">0°</div></div>
                     <div class="stat-card"><div class="section-title">ROM Mínimo</div><div class="stat-value" id="statMin">0°</div></div>
                     <div class="stat-card"><div class="section-title">Velocidad</div><div class="stat-value" id="statVelocidad">0°/s</div></div>
+                    <div class="stat-card"><div class="section-title">Reps.</div><div class="stat-value" id="statReps">0</div></div>
                 </div>
 
                 <div class="center-visualization">
@@ -192,25 +1757,50 @@
         const SERVICE_UUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
         const CHAR_TX_UUID = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
 
+        function recalibrarPorcentajeBateria(batCrudo) {
+            return Math.max(0, Math.min(100, Math.round(batCrudo)));
+        }
+
         let matrizClinica = []; 
         let tiempoInicio = 0, cronometroInterval;
         let historialGrafica = new Array(100).fill(0);
-        const canvas = document.getElementById('graficaAngulo'), ctx = canvas.getContext('2d');
+        const canvas = document.getElementById('graficaAngulo');
+        const ctx = canvas.getContext('2d');
 
         let maxAngulo = 0, minAngulo = 999;
         let anguloAnteriorJS = 0, tiempoAnteriorJS = 0, velocidadSuavizada = 0;
 
-        // Eje por defecto cambiado a Z (ahora Sagital)
         let ejeActivo = 'Z'; 
+        let ejeGrabado = 'Z'; 
         let rawX = 0, rawY = 0, rawZ = 0;
         let offsetX = 0, offsetY = 0, offsetZ = 0;
 
-        // --- VARIABLES DEL FILTRO DE RUIDO ---
+        // --- FILTROS Y ESTADOS ---
         let anguloSuavizado = 0;
         let anguloMostrarFinal = 0;
-        const ALPHA_FILTRO = 0.15; // Suavidad: 0.1 es muy suave, 0.9 es muy brusco
-        const BANDA_MUERTA = 1;    // Ignorar cambios menores a 1 grado (ruido elástico)
-        // -------------------------------------
+        const ALPHA_FILTRO = 0.18;   
+        const BANDA_MUERTA = 2;      
+
+        // --- CORRECCIÓN DE DERIVA ---
+        let derivaX = 0, derivaY = 0, derivaZ = 0;
+        let tiempoUltimaDeriva = 0;
+        let rechazosSeguidos = 0, signoUltimoRechazo = 0;
+        const TAU_DERIVA = 1.2;      
+
+        let historialQuietud = []; 
+        const VENTANA_QUIETUD = 3;      
+        const UMBRAL_RANGO_QUIETO = 3;  
+        
+        // --- NUEVAS VARIABLES PARA EL EJE TRANSVERSO (X) - Filtro Dinámico de 10° en 5s ---
+        let historialX_mov = [];
+        let anguloX_fijo = 0;
+
+        // --- VARIABLES DE RESUMEN CLÍNICO ---
+        let estadoRepeticion = 0; 
+        let repeticiones = 0;
+        let sumaVelocidad = 0;
+        let muestrasVelocidad = 0;
+        let bufferROM = [];
 
         function iniciarApp() {
             document.getElementById('screen-home').classList.remove('active');
@@ -230,7 +1820,6 @@
             let contenedor = document.getElementById('contenedorPierna');
             let titulo = document.getElementById('tituloEjeTexto');
             
-            // Actualizado para reflejar tu orientación física
             if(ejeActivo === 'Z') {
                 contenedor.className = "limb-container sagital";
                 titulo.innerText = "Plano Sagital (Flexión/Extensión)";
@@ -243,12 +1832,21 @@
             }
             
             document.getElementById('miembroAnimado').style.transform = "rotate(0deg)";
+            historialQuietud = []; 
+            historialX_mov = [];
+            anguloX_fijo = rawX - offsetX;
         }
 
         function encerarAngulo() {
             offsetX = rawX; offsetY = rawY; offsetZ = rawZ;
-            anguloSuavizado = 0; // Reiniciamos también el filtro
+            anguloSuavizado = 0; 
             anguloMostrarFinal = 0;
+            derivaX = 0; derivaY = 0; derivaZ = 0;
+            tiempoUltimaDeriva = 0;
+            rechazosSeguidos = 0; signoUltimoRechazo = 0;
+            historialQuietud = [];
+            historialX_mov = [];
+            anguloX_fijo = 0;
             let btn = document.getElementById('btnEncerar');
             btn.innerHTML = "✅ Cero Anatómico Guardado";
             btn.style.backgroundColor = "var(--success)";
@@ -275,7 +1873,7 @@
                 document.getElementById('batContainer').classList.add('connected');
                 document.getElementById('btnConectar').style.display = "none";
                 document.getElementById('btnIniciar').style.display = "flex";
-            } catch (error) { alert("Error de conexión."); }
+            } catch (error) { alert("Error de conexión al Bluetooth."); }
         }
 
         function onDisconnectBLE() {
@@ -296,26 +1894,86 @@
                     rawY = parseFloat(match[2]);
                     rawZ = parseFloat(match[3]);
                     
-                    let bat = parseInt(match[4]);
+                    let bat = recalibrarPorcentajeBateria(parseInt(match[4]));
                     document.getElementById('batText').innerText = bat + "%";
                     document.getElementById('batLevel').style.width = bat + "%";
                     document.getElementById('batLevel').style.backgroundColor = bat > 50 ? "var(--success)" : (bat > 20 ? "var(--warning)" : "var(--danger)");
 
+                    const ahoraDeriva = Date.now();
+                    let dtDeriva = (ahoraDeriva - tiempoUltimaDeriva) / 1000;
+                    if (tiempoUltimaDeriva === 0 || dtDeriva > 2) dtDeriva = 0.1; 
+                    const dtSeguro = Math.max(dtDeriva, 0.02);
+
+                    let anguloCandidato = 0;
+                    if(ejeActivo === 'Z') anguloCandidato = (rawZ - offsetZ) - derivaZ;
+                    if(ejeActivo === 'Y') anguloCandidato = (rawY - offsetY) - derivaY;
+                    if(ejeActivo === 'X') anguloCandidato = (rawX - offsetX);
+
+                    historialQuietud.push({ t: ahoraDeriva, v: anguloCandidato });
+                    while (historialQuietud.length && (ahoraDeriva - historialQuietud[0].t) > VENTANA_QUIETUD * 1000) {
+                        historialQuietud.shift();
+                    }
+                    let rangoReciente = 0;
+                    if (historialQuietud.length > 1) {
+                        const valores = historialQuietud.map(e => e.v);
+                        rangoReciente = Math.max(...valores) - Math.min(...valores);
+                    }
+                    const estaQuieto = rangoReciente < UMBRAL_RANGO_QUIETO;
+
+                    const VELOCIDAD_MAX_FISIOLOGICA = 900; 
+                    const velocidadImplicita = Math.abs(anguloCandidato - anguloSuavizado) / dtSeguro;
+                    const signoSalto = Math.sign(anguloCandidato - anguloSuavizado);
+
+                    if (velocidadImplicita > VELOCIDAD_MAX_FISIOLOGICA) {
+                        const esConfirmado = (rechazosSeguidos > 0 && signoSalto === signoUltimoRechazo);
+                        if (!esConfirmado) {
+                            rechazosSeguidos++;
+                            signoUltimoRechazo = signoSalto;
+                            tiempoUltimaDeriva = ahoraDeriva;
+                            continue; 
+                        }
+                    }
+                    rechazosSeguidos = 0;
+                    tiempoUltimaDeriva = ahoraDeriva;
+
+                    if (estaQuieto) {
+                        const factor = 1 - Math.exp(-dtDeriva / TAU_DERIVA);
+                        if (ejeActivo !== 'X') {
+                            derivaX += ((rawX - offsetX) - derivaX) * factor;
+                        }
+                        derivaY += ((rawY - offsetY) - derivaY) * factor;
+                        derivaZ += ((rawZ - offsetZ) - derivaZ) * factor;
+                    }
+
                     let anguloBruto = 0;
-                    if(ejeActivo === 'Z') anguloBruto = rawZ - offsetZ;
-                    if(ejeActivo === 'Y') anguloBruto = rawY - offsetY;
-                    if(ejeActivo === 'X') anguloBruto = rawX - offsetX;
+                    if(ejeActivo === 'Z') {
+                        anguloBruto = (rawZ - offsetZ) - derivaZ;
+                    } else if(ejeActivo === 'Y') {
+                        anguloBruto = (rawY - offsetY) - derivaY;
+                    } else if(ejeActivo === 'X') {
+                        let rawX_actual = rawX - offsetX;
+                        
+                        historialX_mov.push({ t: ahoraDeriva, v: rawX_actual });
+                        while (historialX_mov.length > 0 && (ahoraDeriva - historialX_mov[0].t) > 5000) {
+                            historialX_mov.shift();
+                        }
+                        
+                        let minX = rawX_actual, maxX = rawX_actual;
+                        for (let j = 0; j < historialX_mov.length; j++) {
+                            if (historialX_mov[j].v < minX) minX = historialX_mov[j].v;
+                            if (historialX_mov[j].v > maxX) maxX = historialX_mov[j].v;
+                        }
+                        
+                        if ((maxX - minX) >= 10) {
+                            anguloX_fijo = rawX_actual;
+                        }
+                        
+                        anguloBruto = anguloX_fijo;
+                    }
                     
-                    // --- APLICACIÓN DE LOS FILTROS MATEMÁTICOS ---
-                    
-                    // 1. Filtro EMA (Absorbe espasmos y temblores rápidos)
                     anguloSuavizado = (ALPHA_FILTRO * anguloBruto) + ((1 - ALPHA_FILTRO) * anguloSuavizado);
-                    
-                    // 2. Redondeo para eliminar números decimales (Convierte a Entero)
                     let anguloEntero = Math.round(anguloSuavizado);
 
-                    // 3. Filtro de Banda Muerta (Ruido Elástico)
-                    // Solo actualiza la pantalla si el movimiento supera el margen de ruido
                     if (Math.abs(anguloEntero - anguloMostrarFinal) >= BANDA_MUERTA) {
                         anguloMostrarFinal = anguloEntero;
                     }
@@ -327,53 +1985,100 @@
         }
 
         function procesarDatoReal(angulo) {
-            // Ya no usamos .toFixed(1) porque ahora es un número entero perfecto
-            document.getElementById('anguloPantalla').innerHTML = `${Math.abs(angulo)}<span>°</span>`;
+            let angAbs = Math.abs(angulo);
+            document.getElementById('anguloPantalla').innerHTML = `${angAbs}<span>°</span>`;
             
-            // Animación CSS dinámica
             let giroAnimacion = (ejeActivo === 'Z') ? -angulo : angulo;
             document.getElementById('miembroAnimado').style.transform = `rotate(${giroAnimacion}deg)`;
 
             historialGrafica.shift();
-            historialGrafica.push(Math.abs(angulo));
+            historialGrafica.push(angAbs);
             dibujarGrafica();
 
             let tiempoAct = Date.now();
             if (tiempoAnteriorJS > 0 && (tiempoAct - tiempoAnteriorJS)/1000.0 > 0.02) {
                 let vel = Math.abs((angulo - anguloAnteriorJS) / ((tiempoAct - tiempoAnteriorJS)/1000.0));
                 velocidadSuavizada = (velocidadSuavizada * 0.8) + (vel * 0.2);
-                document.getElementById('statVelocidad').innerText = Math.round(velocidadSuavizada) + "°/s";
+                let velRedondeada = Math.round(velocidadSuavizada);
+                document.getElementById('statVelocidad').innerText = velRedondeada + "°/s";
+                
+                if (grabando && velRedondeada > 0) {
+                    sumaVelocidad += velRedondeada;
+                    muestrasVelocidad++;
+                }
             }
             anguloAnteriorJS = angulo; tiempoAnteriorJS = tiempoAct;
 
             if (grabando) {
-                matrizClinica.push([(Date.now() - tiempoInicio)/1000, rawX - offsetX, rawY - offsetY, rawZ - offsetZ]);
-                let angAbs = Math.abs(angulo);
-                if (angAbs > maxAngulo) { maxAngulo = angAbs; document.getElementById('statMax').innerText = maxAngulo + "°"; }
-                if (angAbs < minAngulo && (Date.now() - tiempoInicio) > 500) { minAngulo = angAbs; document.getElementById('statMin').innerText = minAngulo + "°"; }
+                let valX_guardar = (ejeActivo === 'X') ? anguloX_fijo : ((rawX - offsetX) - derivaX);
+                matrizClinica.push([(Date.now() - tiempoInicio)/1000, valX_guardar, (rawY - offsetY) - derivaY, (rawZ - offsetZ) - derivaZ]);
+                
+                bufferROM.push(angAbs);
+                if (bufferROM.length > 10) { bufferROM.shift(); }
+
+                if (bufferROM.length === 10) {
+                    let minEnBuffer = Math.min(...bufferROM);
+                    let maxEnBuffer = Math.max(...bufferROM);
+
+                    if (minEnBuffer > maxAngulo) { 
+                        maxAngulo = minEnBuffer; 
+                        document.getElementById('statMax').innerText = maxAngulo + "°"; 
+                    }
+
+                    if (maxEnBuffer < minAngulo && (Date.now() - tiempoInicio) > 500) { 
+                        minAngulo = maxEnBuffer; 
+                        document.getElementById('statMin').innerText = minAngulo + "°"; 
+                    }
+                }
+                
+                if (estadoRepeticion === 0 && angAbs >= 30) {
+                    estadoRepeticion = 1; 
+                } else if (estadoRepeticion === 1 && angAbs <= 15) {
+                    estadoRepeticion = 0; 
+                    repeticiones++;
+                    document.getElementById('statReps').innerText = repeticiones;
+                }
             }
         }
 
         function iniciarTomaDatos() {
-            if (document.getElementById('inNombre').value.trim() === "") return alert("Falta el nombre.");
+            if (document.getElementById('inNombre').value.trim() === "") return alert("Por favor, ingresa el nombre del paciente.");
             document.getElementById('btnIniciar').style.display = "none";
             document.getElementById('btnDetener').style.display = "flex";
             document.getElementById('btnDescargar').style.display = "none";
             
-            matrizClinica = []; maxAngulo = 0; minAngulo = 999;
-            tiempoInicio = Date.now(); grabando = true;
+            matrizClinica = []; bufferROM = [];
+            maxAngulo = 0; minAngulo = 999;
+            repeticiones = 0; estadoRepeticion = 0;
+            sumaVelocidad = 0; muestrasVelocidad = 0;
+            
+            document.getElementById('statMax').innerText = "0°";
+            document.getElementById('statMin').innerText = "0°";
+            document.getElementById('statReps').innerText = "0";
+
+            ejeGrabado = ejeActivo; 
+            document.querySelectorAll('input[name="eje"]').forEach(r => r.disabled = true);
+
+            tiempoInicio = Date.now(); 
+            grabando = true;
+
             cronometroInterval = setInterval(() => {
                 let segs = Math.floor((Date.now() - tiempoInicio) / 1000);
-                let decimas = Math.floor(((Date.now() - tiempoInicio) % 1000) / 100);
-                document.getElementById('tiempoPantalla').innerText = Math.floor(segs/60).toString().padStart(2,'0') + ":" + (segs%60).toString().padStart(2,'0') + "." + decimas;
-            }, 100); 
+                let minutos = Math.floor(segs / 60);
+                let segundosRestantes = segs % 60;
+                document.getElementById('tiempoPantalla').innerText = minutos.toString().padStart(2,'0') + ":" + segundosRestantes.toString().padStart(2,'0');
+            }, 1000); 
         }
 
         function detenerTomaDatos() {
-            grabando = false; clearInterval(cronometroInterval);
+            grabando = false; 
+            clearInterval(cronometroInterval);
             document.getElementById('btnDetener').style.display = "none";
             document.getElementById('btnIniciar').style.display = "flex";
             document.getElementById('btnDescargar').style.display = "flex";
+            document.querySelectorAll('input[name="eje"]').forEach(r => r.disabled = false);
+            
+            if (minAngulo === 999) { minAngulo = 0; document.getElementById('statMin').innerText = "0°"; }
         }
 
         function dibujarGrafica() {
@@ -389,20 +2094,179 @@
             ctx.stroke();
         }
 
-        function descargarExcel() {
-            let articulacion = document.getElementById('selectArticulacion').options[document.getElementById('selectArticulacion').selectedIndex].text;
-            let csv = "REPORTE OSTEOCINEMATICO - GENUTRACK\nPaciente: " + document.getElementById('inNombre').value + "\nArticulacion: " + articulacion + "\n\n";
-            // Ahora la leyenda indica que Z es el plano sagital y X el transverso
-            csv += "Tiempo(s),Transversal_X(Grados),Frontal_Y(Grados),Sagital_Z(Grados)\n";
-            // Exporta en números enteros, sin decimales
-            matrizClinica.forEach(f => csv += f[0].toFixed(2) + "," + Math.round(f[1]) + "," + Math.round(f[2]) + "," + Math.round(f[3]) + "\n");
-            
-            let blob = new Blob([csv], { type: 'text/csv' });
-            let link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = `GenuTrack_${document.getElementById('inNombre').value}.csv`;
-            link.click();
+        function generarImagenGrafica(puntos, nombrePlano) {
+            const width = 900, height = 460;
+            const lienzo = document.createElement('canvas');
+            lienzo.width = width; lienzo.height = height;
+            const g = lienzo.getContext('2d');
+
+            g.fillStyle = '#ffffff';
+            g.fillRect(0, 0, width, height);
+
+            const pad = { left: 60, right: 30, top: 55, bottom: 55 };
+            const plotW = width - pad.left - pad.right;
+            const plotH = height - pad.top - pad.bottom;
+
+            const tiempos = puntos.map(p => p.t);
+            const angulos = puntos.map(p => p.a);
+            const tMax = Math.max(...tiempos, 1);
+            const aMax = Math.max(...angulos, 10);
+
+            g.fillStyle = '#0f172a';
+            g.font = 'bold 20px Arial';
+            g.textAlign = 'center';
+            g.fillText('Ángulo (Grados)', width / 2, 28);
+            if (nombrePlano) {
+                g.fillStyle = '#2563eb';
+                g.font = '13px Arial';
+                g.fillText('Plano: ' + nombrePlano, width / 2, 46);
+            }
+
+            g.font = '12px Arial';
+            const pasosY = 5;
+            for (let i = 0; i <= pasosY; i++) {
+                const valor = aMax - (aMax / pasosY) * i;
+                const y = pad.top + (plotH / pasosY) * i;
+                g.strokeStyle = '#e2e8f0'; g.lineWidth = 1;
+                g.beginPath(); g.moveTo(pad.left, y); g.lineTo(width - pad.right, y); g.stroke();
+                g.fillStyle = '#64748b'; g.textAlign = 'right';
+                g.fillText(Math.round(valor), pad.left - 8, y + 4);
+            }
+
+            const pasosX = 6;
+            for (let i = 0; i <= pasosX; i++) {
+                const valor = (tMax / pasosX) * i;
+                const x = pad.left + (plotW / pasosX) * i;
+                g.strokeStyle = '#e2e8f0'; g.lineWidth = 1;
+                g.beginPath(); g.moveTo(x, pad.top); g.lineTo(x, height - pad.bottom); g.stroke();
+                g.fillStyle = '#64748b'; g.textAlign = 'center';
+                g.fillText(valor.toFixed(1), x, height - pad.bottom + 18);
+            }
+
+            g.strokeStyle = '#94a3b8'; g.lineWidth = 1.5;
+            g.beginPath();
+            g.moveTo(pad.left, pad.top);
+            g.lineTo(pad.left, height - pad.bottom);
+            g.lineTo(width - pad.right, height - pad.bottom);
+            g.stroke();
+
+            const escalaX = t => pad.left + (t / tMax) * plotW;
+            const escalaY = a => pad.top + plotH - (a / aMax) * plotH;
+
+            g.strokeStyle = '#2563eb'; g.lineWidth = 1.5;
+            g.beginPath();
+            puntos.forEach((p, i) => {
+                const x = escalaX(p.t), y = escalaY(p.a);
+                if (i === 0) g.moveTo(x, y); else g.lineTo(x, y);
+            });
+            g.stroke();
+
+            g.fillStyle = '#2563eb';
+            puntos.forEach(p => {
+                g.beginPath();
+                g.arc(escalaX(p.t), escalaY(p.a), 2.6, 0, Math.PI * 2);
+                g.fill();
+            });
+
+            g.fillStyle = '#334155'; g.font = '13px Arial'; g.textAlign = 'center';
+            g.fillText('Tiempo (segundos)', width / 2, height - 12);
+            g.save();
+            g.translate(18, height / 2);
+            g.rotate(-Math.PI / 2);
+            g.fillText('Ángulo (°)', 0, 0);
+            g.restore();
+
+            return lienzo.toDataURL('image/png');
+        }
+
+        async function descargarExcel() {
+            const btn = document.getElementById('btnDescargar');
+            const textoOriginal = btn.innerHTML;
+            btn.innerHTML = "⏳ Generando reporte...";
+            btn.disabled = true;
+
+            try {
+                const nombrePaciente = document.getElementById('inNombre').value || 'Paciente';
+                const articulacion = document.getElementById('selectArticulacion').value;
+                const velPromedio = muestrasVelocidad > 0 ? Math.round(sumaVelocidad / muestrasVelocidad) : 0;
+
+                let nombreEjeExportar = "";
+                if (ejeGrabado === 'Z') nombreEjeExportar = "Sagital (Flexión/Extensión)";
+                else if (ejeGrabado === 'Y') nombreEjeExportar = "Frontal (Abducción/Aducción)";
+                else if (ejeGrabado === 'X') nombreEjeExportar = "Transverso (Rotación)";
+
+                const puntos = matrizClinica.map(f => {
+                    let valorEje = 0;
+                    if (ejeGrabado === 'Z') valorEje = f[3];
+                    else if (ejeGrabado === 'Y') valorEje = f[2];
+                    else if (ejeGrabado === 'X') valorEje = f[1];
+                    return { t: f[0], a: Math.round(Math.abs(valorEje)) };
+                });
+
+                const imagenGrafica = generarImagenGrafica(puntos.length ? puntos : [{ t: 0, a: 0 }], nombreEjeExportar);
+
+                const workbook = new ExcelJS.Workbook();
+                workbook.creator = 'GenuTrack';
+                workbook.created = new Date();
+                const hoja = workbook.addWorksheet('Reporte GenuTrack');
+
+                hoja.columns = [
+                    { key: 'a', width: 26 }, { key: 'b', width: 22 }, { key: 'c', width: 3 },
+                    { key: 'd', width: 10 }, { key: 'e', width: 10 }, { key: 'f', width: 10 },
+                    { key: 'g', width: 10 }, { key: 'h', width: 10 }, { key: 'i', width: 10 }
+                ];
+
+                hoja.mergeCells('A1:I1');
+                const titulo = hoja.getCell('A1');
+                titulo.value = 'REPORTE OSTEOCINEMÁTICO — GenuTrack';
+                titulo.font = { bold: true, size: 16, color: { argb: 'FF2563EB' } };
+                hoja.getRow(1).height = 28;
+
+                hoja.addRow([]);
+                hoja.addRow(['Paciente:', nombrePaciente]);
+                hoja.addRow(['Articulación:', articulacion]);
+                hoja.addRow(['Plano evaluado:', nombreEjeExportar]);
+                hoja.addRow([]);
+
+                const filaResumen = hoja.addRow(['RESUMEN DE SESIÓN']);
+                filaResumen.font = { bold: true, color: { argb: 'FF0F172A' } };
+                hoja.addRow(['ROM máximo alcanzado (validado por 1s)', maxAngulo + '°']);
+                hoja.addRow(['ROM mínimo (validado por 1s)', minAngulo + '°']);
+                hoja.addRow(['Velocidad promedio', velPromedio + '°/s']);
+                hoja.addRow(['Número de repeticiones', repeticiones]);
+                hoja.addRow([]);
+
+                const filaTabla = hoja.addRow(['Tiempo (s)', 'Ángulo (°)']);
+                filaTabla.eachCell(c => {
+                    c.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+                    c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF2563EB' } };
+                });
+
+                puntos.forEach(p => hoja.addRow([Number(p.t.toFixed(2)), p.a]));
+
+                [3, 4, 5, 7, 8, 9, 10, 11].forEach(fila => {
+                    hoja.getCell('A' + fila).font = { bold: true };
+                });
+
+                const imageId = workbook.addImage({ base64: imagenGrafica, extension: 'png' });
+                hoja.addImage(imageId, { tl: { col: 3, row: 1 }, ext: { width: 540, height: 276 } });
+
+                const buffer = await workbook.xlsx.writeBuffer();
+                const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `GenuTrack_Reporte_${nombrePaciente}.xlsx`;
+                link.click();
+            } catch (err) {
+                console.error(err);
+                alert('No se pudo generar el reporte de Excel.');
+            } finally {
+                btn.innerHTML = textoOriginal;
+                btn.disabled = false;
+            }
         }
     </script>
 </body>
 </html>
+GenuTrack_v8.html
+Mostrando GenuTrack_v8.html.
